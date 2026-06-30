@@ -78,7 +78,26 @@
       f_image: 'Ürün görseli (opsiyonel)', f_image_hint: 'Yüklersen reklam kreatiflerinde arka plan olarak kullanılır',
       remove_image: 'Görseli kaldır', choose_image: 'Görsel seç',
       preview: 'Keşfet', ad_preview: 'Reklam Önizleme', close: 'Kapat',
-      delete_all: 'Tümünü Sil', delete_all_confirm: 'TÜM kampanyaları silmek istediğine emin misin?'
+      delete_all: 'Tümünü Sil', delete_all_confirm: 'TÜM kampanyaları silmek istediğine emin misin?',
+      // ekip / auth
+      nav_team: 'Ekip',
+      role_owner: 'Sahip', role_editor: 'Editör', role_viewer: 'İzleyici',
+      role_readonly: 'Bu işlem için düzenleme yetkin yok (izleyici).',
+      err_save: 'Kaydedilemedi — bağlantını kontrol et', logout: 'Çıkış',
+      auth_sub: 'Çalışma alanı oluştur ya da davet koduyla ekibe katıl.',
+      auth_create_tab: 'Çalışma alanı oluştur', auth_join_tab: 'Kodla katıl',
+      auth_ws_name: 'Çalışma alanı adı', auth_ws_ph: 'örn. YHC Reklam',
+      auth_your_name: 'Adın', auth_name_ph: 'örn. Eren',
+      auth_create_btn: 'Oluştur ve başla', auth_code: 'Davet kodu', auth_join_btn: 'Katıl',
+      auth_foot: 'Şifre yok — kimliğin cihazında saklanan gizli bir anahtarla tutulur.',
+      auth_fill: 'Lütfen alanları doldur', auth_err: 'Bir şeyler ters gitti, tekrar dene',
+      auth_bad_code: 'Kod geçersiz ya da iptal edilmiş',
+      team_title: 'Ekip', team_sub: 'Davet kodları ve üyeler',
+      team_solo_note: 'İşbirliği için uygulamanın canlı (backend kurulu) sürümü gerekir. Şu an yerel/solo moddasın.',
+      team_invites: 'Davet Kodları', team_invites_sub: 'Kod üret, linki ekibine gönder. Katılan kişi bu rolü alır.',
+      team_gen_code: 'Kod üret', team_members: 'Üyeler', team_you: 'sen',
+      team_no_codes: 'Henüz davet kodu yok.', team_copy_link: 'Linki kopyala', team_revoke: 'İptal et',
+      team_revoked: 'İptal edildi', team_link_copied: 'Davet linki kopyalandı'
     },
     en: {
       nav_features: 'Features', nav_how: 'How It Works', nav_pricing: 'Pricing',
@@ -146,7 +165,26 @@
       f_image: 'Product image (optional)', f_image_hint: 'If uploaded, used as the background in ad creatives',
       remove_image: 'Remove image', choose_image: 'Choose image',
       preview: 'Discover', ad_preview: 'Ad Preview', close: 'Close',
-      delete_all: 'Delete All', delete_all_confirm: 'Are you sure you want to delete ALL campaigns?'
+      delete_all: 'Delete All', delete_all_confirm: 'Are you sure you want to delete ALL campaigns?',
+      // team / auth
+      nav_team: 'Team',
+      role_owner: 'Owner', role_editor: 'Editor', role_viewer: 'Viewer',
+      role_readonly: 'You do not have edit permission for this (viewer).',
+      err_save: 'Could not save — check your connection', logout: 'Log out',
+      auth_sub: 'Create a workspace or join a team with an invite code.',
+      auth_create_tab: 'Create workspace', auth_join_tab: 'Join with code',
+      auth_ws_name: 'Workspace name', auth_ws_ph: 'e.g. YHC Ads',
+      auth_your_name: 'Your name', auth_name_ph: 'e.g. Eren',
+      auth_create_btn: 'Create & start', auth_code: 'Invite code', auth_join_btn: 'Join',
+      auth_foot: 'No passwords — your identity is held by a secret key stored on your device.',
+      auth_fill: 'Please fill in the fields', auth_err: 'Something went wrong, try again',
+      auth_bad_code: 'Code is invalid or revoked',
+      team_title: 'Team', team_sub: 'Invite codes and members',
+      team_solo_note: 'Collaboration requires the live (backend-enabled) version. You are in local/solo mode now.',
+      team_invites: 'Invite Codes', team_invites_sub: 'Generate a code and send the link to your team. Whoever joins gets this role.',
+      team_gen_code: 'Generate code', team_members: 'Members', team_you: 'you',
+      team_no_codes: 'No invite codes yet.', team_copy_link: 'Copy link', team_revoke: 'Revoke',
+      team_revoked: 'Revoked', team_link_copied: 'Invite link copied'
     }
   };
 

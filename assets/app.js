@@ -12,6 +12,11 @@
   var STORE_KEY = 'admiral_campaigns_v1';
   var state = { campaigns: [], pendingResult: null, currentCampaignId: null };
 
+  // ---- roller (solo modda herkes owner sayılır) ----
+  function canEdit() { return !AdmiralStore.isCloud() || AdmiralStore.canEdit(); }
+  function isOwner() { return !AdmiralStore.isCloud() || AdmiralStore.isOwner(); }
+  function denyView() { toast(t('role_readonly')); }
+
   // ---- Meta Reklam Kütüphanesi verisi (data/winning-ads.json) ----
   // Statik app anahtarsız kalsın diye veri dosyadan okunur; dosya zamanlanmış
   // cron rutiniyle (scripts/refresh-winning-ads) güncel tutulur.
@@ -35,14 +40,17 @@
     };
   }
 
-  function load() {
-    try {
-      var raw = localStorage.getItem(STORE_KEY);
-      if (raw) { state.campaigns = JSON.parse(raw); return; }
-    } catch (e) {}
-    seedDemo();
+  // Veriyi yükle: cloud'da sunucudan, solo'da localStorage (yoksa demo seed).
+  function bootData() {
+    return AdmiralStore.getCampaigns().then(function (camps) {
+      if (camps === null) seedDemo();        // solo, ilk açılış
+      else state.campaigns = camps;          // cloud veya kayıtlı solo
+    }).catch(function () { state.campaigns = []; });
   }
-  function save() { localStorage.setItem(STORE_KEY, JSON.stringify(state.campaigns)); }
+  function save() {
+    if (AdmiralStore.isCloud() && !canEdit()) return;
+    AdmiralStore.saveCampaigns(state.campaigns).catch(function () { toast(t('err_save')); });
+  }
 
   function seedDemo() {
     var demos = [
@@ -117,7 +125,7 @@
     var agg = aggregate();
     var html = '' +
       '<div class="page-head"><div><h1>' + t('dash_title') + '</h1><p>' + t('dash_sub') + '</p></div>' +
-      '<button class="btn btn-primary" id="goNew">＋ ' + t('nav_new') + '</button></div>' +
+      (canEdit() ? '<button class="btn btn-primary" id="goNew">＋ ' + t('nav_new') + '</button>' : '') + '</div>' +
       '<div class="kpi-strip">' +
         kpi(t('kpi_spend'), fmtMoney(agg.spend), '+12.4%', 'up') +
         kpi(t('kpi_roas'), (agg.roas).toFixed(2) + '×', '+0.3', 'up') +
@@ -142,7 +150,8 @@
 
   function emptyState() {
     return '<div class="empty-state"><div class="ico">🚀</div><h3>' + t('empty_title') + '</h3>' +
-      '<p>' + t('empty_sub') + '</p><button class="btn btn-primary" id="goNewEmpty">＋ ' + t('empty_cta') + '</button></div>';
+      '<p>' + t('empty_sub') + '</p>' +
+      (canEdit() ? '<button class="btn btn-primary" id="goNewEmpty">＋ ' + t('empty_cta') + '</button>' : '') + '</div>';
   }
 
   function campaignRow(c) {
@@ -163,7 +172,7 @@
         cm(fmtNum(agg.conv), t('metric_conv')) +
         cm((c.variants || []).length, t('res_title')) +
       '</div>' +
-      '<button class="c-delete" data-del="' + c.id + '" title="' + t('delete') + '">🗑</button>' +
+      (canEdit() ? '<button class="c-delete" data-del="' + c.id + '" title="' + t('delete') + '">🗑</button>' : '') +
       '</div>';
   }
   function cm(v, l) { return '<div class="c-metric"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>'; }
@@ -183,6 +192,11 @@
   // ---- new campaign ----
   function renderNew() {
     setActiveNav('new');
+    if (!canEdit()) {
+      main().innerHTML = '<div class="page-head"><div><h1>' + t('new_title') + '</h1></div></div>' +
+        '<div class="panel-block"><p class="panel-sub">' + t('role_readonly') + '</p></div>';
+      return;
+    }
     var objOpts = ['conversions', 'traffic', 'awareness', 'leads'].map(function (o) {
       return '<option value="' + o + '">' + t('obj_' + o) + '</option>';
     }).join('');
@@ -243,6 +257,7 @@
 
   // ---- generation flow (AI wow) ----
   function startGeneration() {
+    if (!canEdit()) { denyView(); return; }
     var brand = (el('#f_brand').value || '').trim();
     var product = (el('#f_product').value || '').trim();
     if (!brand || !product) { toast(lang === 'en' ? 'Please fill brand and product' : 'Marka ve ürün gerekli'); return; }
@@ -495,6 +510,7 @@
   // ---- kampanya silme ----
   function deleteCampaign(cid, ev) {
     if (ev) ev.stopPropagation();
+    if (!canEdit()) { denyView(); return; }
     var c = state.campaigns.filter(function (x) { return x.id === cid; })[0];
     if (!c) return;
     confirmModal(t('delete_confirm'), function () {
@@ -507,6 +523,7 @@
   }
 
   function deleteAll() {
+    if (!canEdit()) { denyView(); return; }
     if (!state.campaigns.length) return;
     confirmModal(t('delete_all_confirm'), function () {
       state.campaigns = [];
@@ -542,6 +559,7 @@
 
   // ---- launch ----
   function launchCampaign() {
+    if (!canEdit()) { denyView(); return; }
     var r = state.pendingResult;
     var chosen = r.variants.filter(function (v) { return selected[v.id]; });
     chosen.forEach(function (v) { v.metrics = AdmiralEngine.simulateMetrics(v, r.budgetDaily, 1); });
@@ -656,6 +674,7 @@
 
   // ---- optimize loop ----
   function optimize(c) {
+    if (!canEdit()) { denyView(); return; }
     // kazananı bul, etrafında yeni varyantlar üret, en iyiyi ekle
     var fresh = AdmiralEngine.generateVariants({
       brand: c.brand, product: c.product, objective: c.objective, lang: lang, count: 6,
@@ -682,8 +701,8 @@
     setActiveNav('campaigns');
     if (!state.campaigns.length) { main().innerHTML = '<div class="page-head"><h1>' + t('nav_campaigns') + '</h1></div>' + emptyState(); bindDashboard(); return; }
     main().innerHTML = '<div class="page-head"><div><h1>' + t('nav_campaigns') + '</h1></div>' +
-      '<div style="display:flex;gap:10px"><button class="btn btn-ghost" id="delAllBtn">🗑 ' + t('delete_all') + '</button>' +
-      '<button class="btn btn-primary" id="goNew">＋ ' + t('nav_new') + '</button></div></div>' +
+      (canEdit() ? '<div style="display:flex;gap:10px"><button class="btn btn-ghost" id="delAllBtn">🗑 ' + t('delete_all') + '</button>' +
+      '<button class="btn btn-primary" id="goNew">＋ ' + t('nav_new') + '</button></div>' : '') + '</div>' +
       state.campaigns.map(campaignRow).join('');
     bindDashboard();
     var da = el('#delAllBtn'); if (da) da.onclick = deleteAll;
@@ -705,21 +724,187 @@
         if (v === 'dashboard') renderDashboard();
         else if (v === 'new') renderNew();
         else if (v === 'campaigns') renderCampaigns();
+        else if (v === 'team') renderTeam();
       };
     });
     document.getElementById('langToggle').onclick = function () {
       lang = lang === 'tr' ? 'en' : 'tr';
       localStorage.setItem('admiral_lang', lang);
       applyLang();
-      renderDashboard();
+      renderWsBadge();
+      if (document.body.classList.contains('pre-auth')) renderAuth();
+      else renderDashboard();
     };
   }
 
-  // Meta verisini yükle, sonra app'i başlat (fetch başarısız olsa da app çalışır)
-  loadWinning().then(function () {
-    load();
+  // ===========================================================
+  // AUTH GATE (şifresiz: workspace oluştur ya da davet koduyla katıl)
+  // ===========================================================
+  function renderAuth(tab) {
+    tab = tab || 'create';
+    document.body.classList.add('pre-auth');
+    setActiveNav('');
+    main().innerHTML =
+      '<div class="auth-wrap"><div class="auth-card">' +
+        '<div class="auth-logo"><span class="logo-mark">A</span> Admiral AI</div>' +
+        '<p class="auth-sub">' + t('auth_sub') + '</p>' +
+        '<div class="auth-tabs">' +
+          '<button class="auth-tab' + (tab === 'create' ? ' active' : '') + '" data-tab="create">' + t('auth_create_tab') + '</button>' +
+          '<button class="auth-tab' + (tab === 'join' ? ' active' : '') + '" data-tab="join">' + t('auth_join_tab') + '</button>' +
+        '</div>' +
+        (tab === 'create'
+          ? '<div class="auth-form">' +
+              '<label>' + t('auth_ws_name') + '</label><input id="a_ws" placeholder="' + t('auth_ws_ph') + '" />' +
+              '<label>' + t('auth_your_name') + '</label><input id="a_owner" placeholder="' + t('auth_name_ph') + '" />' +
+              '<button class="btn btn-primary" id="a_create">' + t('auth_create_btn') + '</button>' +
+            '</div>'
+          : '<div class="auth-form">' +
+              '<label>' + t('auth_code') + '</label><input id="a_code" placeholder="XXXX-XXXX" style="text-transform:uppercase" />' +
+              '<label>' + t('auth_your_name') + '</label><input id="a_jname" placeholder="' + t('auth_name_ph') + '" />' +
+              '<button class="btn btn-primary" id="a_join">' + t('auth_join_btn') + '</button>' +
+            '</div>') +
+        '<p class="auth-foot">' + t('auth_foot') + '</p>' +
+      '</div></div>';
+
+    document.querySelectorAll('.auth-tab').forEach(function (b) {
+      b.onclick = function () { renderAuth(b.getAttribute('data-tab')); };
+    });
+    var cb = el('#a_create');
+    if (cb) cb.onclick = function () {
+      var ws = (el('#a_ws').value || '').trim(), on = (el('#a_owner').value || '').trim();
+      if (!ws || !on) { toast(t('auth_fill')); return; }
+      cb.disabled = true;
+      AdmiralStore.createWorkspace(ws, on).then(afterAuth).catch(function () { cb.disabled = false; toast(t('auth_err')); });
+    };
+    var jb = el('#a_join');
+    if (jb) jb.onclick = function () {
+      var code = (el('#a_code').value || '').trim().toUpperCase(), nm = (el('#a_jname').value || '').trim();
+      if (!code || !nm) { toast(t('auth_fill')); return; }
+      jb.disabled = true;
+      AdmiralStore.join(code, nm).then(afterAuth).catch(function (e) {
+        jb.disabled = false; toast(e && e.status === 404 ? t('auth_bad_code') : t('auth_err'));
+      });
+    };
+  }
+
+  function afterAuth() {
+    document.body.classList.remove('pre-auth');
+    renderWsBadge();
+    bootData().then(function () { renderDashboard(); });
+  }
+
+  // Çalışma alanı rozeti + çıkış (sadece cloud modda).
+  function renderWsBadge() {
+    var foot = document.getElementById('wsBadge');
+    if (!foot) return;
+    if (!AdmiralStore.isCloud() || !AdmiralStore.workspace()) { foot.innerHTML = ''; return; }
+    var ws = AdmiralStore.workspace(), me = AdmiralStore.me();
+    foot.innerHTML =
+      '<div class="ws-name" title="' + esc(ws.name) + '">🏢 ' + esc(ws.name) + '</div>' +
+      '<div class="ws-meta">' + esc(me.name) + ' · <span class="role-tag role-' + ws.role + '">' + t('role_' + ws.role) + '</span></div>' +
+      '<button class="ws-logout" id="wsLogout">' + t('logout') + '</button>';
+    var lo = el('#wsLogout');
+    if (lo) lo.onclick = function () { AdmiralStore.logout(); state.campaigns = []; renderAuth(); };
+  }
+
+  // ===========================================================
+  // TEAM (davet kodları + üyeler)
+  // ===========================================================
+  function renderTeam() {
+    setActiveNav('team');
+    if (!AdmiralStore.isCloud()) {
+      main().innerHTML = '<div class="page-head"><div><h1>' + t('team_title') + '</h1><p>' + t('team_sub') + '</p></div></div>' +
+        '<div class="panel-block"><p class="panel-sub">' + t('team_solo_note') + '</p></div>';
+      return;
+    }
+    main().innerHTML = '<div class="page-head"><div><h1>' + t('team_title') + '</h1><p>' + t('team_sub') + '</p></div></div>' +
+      '<div id="teamBody"><div class="panel-block"><p class="panel-sub">…</p></div></div>';
+    var body = el('#teamBody');
+
+    var jobs = [AdmiralStore.listMembers()];
+    if (isOwner()) jobs.push(AdmiralStore.listInvites());
+    Promise.all(jobs).then(function (res) {
+      var members = res[0].members || [], meId = res[0].me;
+      var invites = res[1] || null;
+      var html = '';
+
+      if (isOwner()) {
+        html += '<div class="panel-block"><h2 class="panel-h">🔑 ' + t('team_invites') + '</h2>' +
+          '<p class="panel-sub">' + t('team_invites_sub') + '</p>' +
+          '<div class="invite-new">' +
+            '<select id="inviteRole"><option value="viewer">' + t('role_viewer') + '</option><option value="editor">' + t('role_editor') + '</option></select>' +
+            '<button class="btn btn-primary btn-sm" id="genInvite">＋ ' + t('team_gen_code') + '</button>' +
+          '</div>' +
+          '<div class="invite-list">' + inviteRows(invites) + '</div></div>';
+      }
+
+      html += '<div class="panel-block"><h2 class="panel-h">👥 ' + t('team_members') + '</h2>' +
+        '<div class="member-list">' + members.map(function (m) {
+          return '<div class="member-row"><div class="m-mark" style="background:' + markColor(m.name) + '">' + esc(initials(m.name)) + '</div>' +
+            '<div class="m-info"><div class="m-name">' + esc(m.name) + (m.id === meId ? ' <span class="m-you">' + t('team_you') + '</span>' : '') + '</div></div>' +
+            '<span class="role-tag role-' + m.role + '">' + t('role_' + m.role) + '</span></div>';
+        }).join('') + '</div></div>';
+
+      body.innerHTML = html;
+
+      var gi = el('#genInvite');
+      if (gi) gi.onclick = function () {
+        gi.disabled = true;
+        AdmiralStore.createInvite(el('#inviteRole').value).then(function () { renderTeam(); }).catch(function () { gi.disabled = false; toast(t('auth_err')); });
+      };
+      bindInviteActions();
+    }).catch(function () { body.innerHTML = '<div class="panel-block"><p class="panel-sub">' + t('auth_err') + '</p></div>'; });
+  }
+
+  function inviteRows(invites) {
+    if (!invites || !invites.length) return '<p class="panel-sub">' + t('team_no_codes') + '</p>';
+    return invites.map(function (iv) {
+      return '<div class="invite-row' + (iv.active ? '' : ' revoked') + '">' +
+        '<code class="invite-code">' + esc(iv.code) + '</code>' +
+        '<span class="role-tag role-' + iv.role + '">' + t('role_' + iv.role) + '</span>' +
+        (iv.active
+          ? '<button class="link-btn" data-copy="' + esc(iv.code) + '">' + t('team_copy_link') + '</button>' +
+            '<button class="link-btn danger" data-revoke="' + esc(iv.code) + '">' + t('team_revoke') + '</button>'
+          : '<span class="revoked-tag">' + t('team_revoked') + '</span>') +
+        '</div>';
+    }).join('');
+  }
+
+  function bindInviteActions() {
+    document.querySelectorAll('[data-copy]').forEach(function (b) {
+      b.onclick = function () {
+        var code = b.getAttribute('data-copy');
+        var link = location.origin + location.pathname.replace(/[^/]*$/, 'app.html') + '#invite=' + code;
+        navigator.clipboard.writeText(link).then(function () { toast(t('team_link_copied')); }, function () { toast(link); });
+      };
+    });
+    document.querySelectorAll('[data-revoke]').forEach(function (b) {
+      b.onclick = function () {
+        AdmiralStore.revokeInvite(b.getAttribute('data-revoke')).then(function () { renderTeam(); });
+      };
+    });
+  }
+
+  // URL'de #invite=CODE varsa join sekmesini kodla aç.
+  function prefillInvite() {
+    var m = (location.hash || '').match(/invite=([A-Za-z0-9-]+)/);
+    if (!m) return false;
+    renderAuth('join');
+    var f = el('#a_code'); if (f) f.value = m[1].toUpperCase();
+    history.replaceState(null, '', location.pathname + location.search);
+    return true;
+  }
+
+  // Meta verisini yükle + backend modunu belirle, sonra app'i başlat.
+  Promise.all([loadWinning(), AdmiralStore.init()]).then(function (res) {
+    var s = res[1];
     applyLang();
     bindNav();
-    renderDashboard();
+    renderWsBadge();
+    if (AdmiralStore.isCloud() && (!s || !s.authenticated)) {
+      if (!prefillInvite()) renderAuth();
+      return;
+    }
+    bootData().then(function () { renderDashboard(); });
   });
 })();
