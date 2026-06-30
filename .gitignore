@@ -1,15 +1,19 @@
 # gstack workspace cache
 .gstack/
 
+# Deploy / FTP sync artifacts
+.ftp-deploy-sync-state.json
+*.log
+
 # OS junk
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Logs / editor
-*.log
+# Editors
 .vscode/
 .idea/
+*.swp
 
 # Node (none used today, but keep clean)
 node_modules/
