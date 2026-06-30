@@ -1,0 +1,27 @@
+{
+  "$comment": "Demo kampanyalar — app ilk açıldığında dashboard'da görünen örnek veri. Tamamen mock/simüle.",
+  "campaigns": [
+    {
+      "id": "cmp_demo_1",
+      "brand": "Moda Nova",
+      "product": "Kışlık kaşmir kazak koleksiyonu",
+      "objective": "conversions",
+      "audience": "25-45 yaş, moda ilgili kadınlar, İstanbul/Ankara/İzmir",
+      "budgetDaily": 750,
+      "status": "winning",
+      "createdAt": "2026-06-22T10:00:00Z",
+      "category": "fashion"
+    },
+    {
+      "id": "cmp_demo_2",
+      "brand": "FitKit",
+      "product": "Evde antrenman direnç bandı seti",
+      "objective": "traffic",
+      "audience": "20-40 yaş, fitness ilgili, ev egzersizi yapanlar",
+      "budgetDaily": 400,
+      "status": "live",
+      "createdAt": "2026-06-25T14:30:00Z",
+      "category": "fitness"
+    }
+  ]
+}

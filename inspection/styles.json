@@ -1,0 +1,39 @@
+{
+  "brand": {
+    "originalName": "AdStellar",
+    "newName": "Admiral AI"
+  },
+  "palette": {
+    "bg": "#0b0d14",
+    "panel": "#12151f",
+    "panel-elevated": "#1a1e2b",
+    "line": "#242838",
+    "fg": "#eef1f8",
+    "fg-soft": "rgba(238,241,248,0.70)",
+    "dim": "rgba(238,241,248,0.42)",
+    "accent": "#6366f1",
+    "accent-2": "#8b5cf6",
+    "accent-soft": "rgba(99,102,241,0.12)",
+    "success": "#22c55e",
+    "warning": "#f59e0b",
+    "danger": "#ef4444"
+  },
+  "typography": {
+    "body": "'Geist','Inter',-apple-system,sans-serif",
+    "display": "'Geist','Inter',sans-serif",
+    "mono": "'Geist Mono','JetBrains Mono',monospace",
+    "weights": [400, 500, 600, 700, 800],
+    "baseFontSize": "14px",
+    "lineHeight": 1.6
+  },
+  "radius": { "sm": "6px", "md": "10px", "lg": "14px", "xl": "20px", "pill": "999px" },
+  "spacing": { "scale": [4, 8, 12, 16, 24, 32, 48, 64], "card-padding": "18px", "section-gap": "32px" },
+  "components": {
+    "nav-style": "left-sidebar-240px",
+    "card-style": "elevated-border-1px-gradient-hover",
+    "button-primary": "gradient-accent-rounded-md",
+    "modal-overlay": "blur(12px)-rgba(0,0,0,0.78)",
+    "kpi-card": "horizontal-strip-4col",
+    "hero": "centered-gradient-glow"
+  }
+}

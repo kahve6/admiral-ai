@@ -1,0 +1,15 @@
+# gstack workspace cache
+.gstack/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs / editor
+*.log
+.vscode/
+.idea/
+
+# Node (none used today, but keep clean)
+node_modules/

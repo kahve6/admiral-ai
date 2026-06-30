@@ -1,0 +1,258 @@
+{
+  "version": "1.0",
+  "source": "Meta Reklam Kütüphanesi + sektör araştırması",
+  "source_en": "Meta Ad Library + sector research",
+  "updated": "2026-06-30",
+  "note_tr": "Bu dosya, Meta Reklam Kütüphanesi'nde ve yayınlanmış vaka analizlerinde gözlemlenen kazanan reklam yapılarını sektör bazında derler. scripts/refresh-winning-ads.md rutini ile düzenli güncellenir. Şablonlar {brand}/{product}/{result}/{o1}/{o2}/{proof}/{pain} ile markaya uyarlanır.",
+  "note_en": "Compiled winning ad structures observed in the Meta Ad Library and published case studies, by sector. Refreshed by the scripts/refresh-winning-ads.md routine. Templates adapt to the brand via {brand}/{product}/{result}/{o1}/{o2}/{proof}/{pain}.",
+  "sectors": {
+    "fashion": {
+      "insights": [
+        { "tr": "UGC (kullanıcı çekimi) video, stüdyo görselini moda kategorisinde belirgin geçiyor; ilk 3 saniyede ürün giyilmiş halde gösterilmeli.", "en": "UGC video clearly outperforms studio shots in fashion; show the product worn in the first 3 seconds." },
+        { "tr": "Sosyal kanıt + 'kaçırma' (kıtlık) kombinasyonu en yüksek CTR'yi veriyor: 'tükeniyor / son bedenler'.", "en": "Social proof + FOMO (scarcity) combo gives the highest CTR: 'selling out / last sizes'." },
+        { "tr": "Ücretsiz iade vurgusu dönüşümü artırıyor — beden korkusunu ortadan kaldırıyor.", "en": "Highlighting free returns lifts conversion — it removes size anxiety." }
+      ],
+      "winners": [
+        {
+          "advertiser": "DTC moda markaları (Zara/Mango tipi)",
+          "structure": "Social Proof + Scarcity",
+          "hook_tr": "{proof} — son bedenler",
+          "hook_en": "{proof} — last sizes left",
+          "triggers": ["socialproof", "scarcity"],
+          "offerComponents": ["sartlar", "hiz"],
+          "template_tr": "{proof}. {brand} {product} ile {result}. {o1}, {o2}. Bedenler tükeniyor — şimdi seç.",
+          "template_en": "{proof}. With {brand} {product} you {result}. {o1}, {o2}. Sizes are selling out — pick yours now.",
+          "why": { "tr": "Kanıt güveni, kıtlık aksiyonu tetikliyor; iade şartı beden riskini siliyor.", "en": "Proof builds trust, scarcity drives action; the returns term removes size risk." }
+        },
+        {
+          "advertiser": "Butik & tasarımcı markalar",
+          "structure": "BAB (Before-After-Bridge)",
+          "hook_tr": "Dolabın dolu ama giyecek bir şey mi yok?",
+          "hook_en": "Closet full but nothing to wear?",
+          "triggers": ["dissonance", "benefits"],
+          "offerComponents": ["servis", "giris"],
+          "template_tr": "Dolabın dolu ama giyecek yok mu? {brand} {product} ile {result}. {o1}, {o2}.",
+          "template_en": "Closet full but nothing to wear? With {brand} {product} you {result}. {o1}, {o2}.",
+          "why": { "tr": "Tanıdık acıyla açıp stil danışmanlığıyla çözüm köprüsü kuruyor.", "en": "Opens with a familiar pain and bridges to a styling-led solution." }
+        }
+      ]
+    },
+    "fitness": {
+      "insights": [
+        { "tr": "Gerçek dönüşüm (before/after) görseli en güçlü kreatif; '12 hafta' gibi net zaman vaadi CTR'yi artırıyor.", "en": "Real transformation (before/after) is the strongest creative; a clear timeframe like '12 weeks' lifts CTR." },
+        { "tr": "'Taahhüt yok / istediğin an iptal' ifadesi başlama engelini düşürüyor.", "en": "'No commitment / cancel anytime' lowers the barrier to start." },
+        { "tr": "Para iade garantisi yüksek bütçeli sağlık kampanyalarında dönüşümü belirgin artırıyor.", "en": "Money-back guarantee notably lifts conversion in higher-budget health campaigns." }
+      ],
+      "winners": [
+        {
+          "advertiser": "Online koçluk & fitness app'leri",
+          "structure": "BAB + Guarantee",
+          "hook_tr": "Spora başlayıp 2 hafta sonra bırakıyor musun?",
+          "hook_en": "Start training, quit after 2 weeks?",
+          "triggers": ["dissonance", "trust"],
+          "offerComponents": ["garanti", "giris"],
+          "template_tr": "Çalışıyorsun ama sonuç gelmiyor mu? {brand} ile {result}. {o1}, {o2}. 30 günde sonuç yoksa para iade.",
+          "template_en": "Working out but no results? With {brand} you {result}. {o1}, {o2}. No result in 30 days? Money back.",
+          "why": { "tr": "Başarısızlık korkusunu adresliyor, garanti ile riski sıfırlıyor.", "en": "Addresses fear of failure and zeroes out risk with a guarantee." }
+        },
+        {
+          "advertiser": "Ekipman & takviye DTC",
+          "structure": "Social Proof + Speed",
+          "hook_tr": "{proof}",
+          "hook_en": "{proof}",
+          "triggers": ["socialproof", "novelty"],
+          "offerComponents": ["hiz", "sartlar"],
+          "template_tr": "{proof}. {brand} {product} ile {result}. {o1}, {o2}. Bugün başla.",
+          "template_en": "{proof}. With {brand} {product} you {result}. {o1}, {o2}. Start today.",
+          "why": { "tr": "Topluluk büyüklüğü kanıtı + hızlı başlangıç vaadi.", "en": "Community-size proof + a fast-start promise." }
+        }
+      ]
+    },
+    "beauty": {
+      "insights": [
+        { "tr": "Dermatolog/uzman onayı (otorite) + '14 günde fark' ölçülü vaadi cilt bakımında kazanıyor.", "en": "Dermatologist/expert endorsement (authority) + a measured '14-day' promise wins in skincare." },
+        { "tr": "Mini deneme seti ile düşük taahhütlü giriş, ilk satın almayı kolaylaştırıyor.", "en": "A low-commitment mini trial set makes the first purchase easier." },
+        { "tr": "Yakın çekim doku/sonuç videosu statik görseli geçiyor.", "en": "Close-up texture/result video beats static imagery." }
+      ],
+      "winners": [
+        {
+          "advertiser": "Cilt bakımı DTC (The Ordinary tipi)",
+          "structure": "Authority + Proof",
+          "hook_tr": "{result} — 14 günde",
+          "hook_en": "{result} — in 14 days",
+          "triggers": ["authority", "socialproof"],
+          "offerComponents": ["deneyim", "garanti"],
+          "template_tr": "{proof}. {brand} {product} ile {result}. {o1}, {o2}. Bugün başla.",
+          "template_en": "{proof}. With {brand} {product} you {result}. {o1}, {o2}. Start today.",
+          "why": { "tr": "Uzman kanıtı + net zaman vaadi şüpheyi kırıyor.", "en": "Expert proof + a precise timeframe breaks skepticism." }
+        },
+        {
+          "advertiser": "Kozmetik markaları",
+          "structure": "PAS (Problem-Agitate-Solve)",
+          "hook_tr": "Onlarca ürün denedin, sonuç yok mu?",
+          "hook_en": "Tried dozens of products, no result?",
+          "triggers": ["dissonance", "smaller"],
+          "offerComponents": ["giris", "garanti"],
+          "template_tr": "Onlarca ürün denedin ama sonuç yok mu? {brand} {product} ile {result}. {o1}, {o2}.",
+          "template_en": "Tried dozens of products with no result? With {brand} {product} you {result}. {o1}, {o2}.",
+          "why": { "tr": "Hayal kırıklığını büyütüp mini deneme ile risksiz giriş sunuyor.", "en": "Agitates the frustration then offers a risk-free mini trial." }
+        }
+      ]
+    },
+    "tech": {
+      "insights": [
+        { "tr": "'Kredi kartı yok / 5 dakikada kurulum' ifadeleri SaaS denemelerinde kayıt oranını artırıyor.", "en": "'No credit card / 5-minute setup' boosts SaaS trial sign-ups." },
+        { "tr": "Ürünün gerçek kullanımını gösteren 5-10 sn ekran videosu (GIF) en iyi performans.", "en": "A 5-10s screen recording (GIF) of real product use performs best." },
+        { "tr": "Somut zaman/maliyet tasarrufu rakamı (ör. 'haftada 8 saat') CTR'yi artırıyor.", "en": "A concrete time/cost-saving number (e.g. '8 hrs/week') lifts CTR." }
+      ],
+      "winners": [
+        {
+          "advertiser": "B2B SaaS (Notion/Monday tipi)",
+          "structure": "PAS + Free Trial",
+          "hook_tr": "Hâlâ 5 farklı araç arasında mı koşuyorsun?",
+          "hook_en": "Still juggling 5 different tools?",
+          "triggers": ["dissonance", "benefits"],
+          "offerComponents": ["giris", "sartlar"],
+          "template_tr": "Tablolar elinde mi patlıyor? {brand} {product} ile {result}. {o1}, {o2}.",
+          "template_en": "Drowning in spreadsheets? With {brand} {product} you {result}. {o1}, {o2}.",
+          "why": { "tr": "Operasyonel acıyı kredi kartsız ücretsiz denemeyle çözüyor.", "en": "Solves an operational pain with a no-card free trial." }
+        },
+        {
+          "advertiser": "Verimlilik araçları",
+          "structure": "Benefit + Proof",
+          "hook_tr": "İşini yarı sürede bitir",
+          "hook_en": "Finish work in half the time",
+          "triggers": ["benefits", "authority"],
+          "offerComponents": ["hiz", "servis"],
+          "template_tr": "{brand} ile {result}. {proof}. {o1}, {o2}.",
+          "template_en": "With {brand} you {result}. {proof}. {o1}, {o2}.",
+          "why": { "tr": "Net fayda + sosyal kanıt (kullanan ekip sayısı).", "en": "Clear benefit + social proof (number of teams using it)." }
+        }
+      ]
+    },
+    "food": {
+      "insights": [
+        { "tr": "İştah açıcı yakın çekim + 'ertesi gün kapında' lojistik vaadi gıda kategorisinde kazanıyor.", "en": "Appetizing close-ups + a 'next-day delivery' promise win in food." },
+        { "tr": "Abonelik esnekliği ('istediğin an dondur') iptal korkusunu azaltıyor.", "en": "Subscription flexibility ('pause anytime') reduces cancellation fear." },
+        { "tr": "Laboratuvar/sertifika kanıtı takviye ürünlerinde güveni artırıyor.", "en": "Lab/certification proof builds trust for supplements." }
+      ],
+      "winners": [
+        {
+          "advertiser": "Abonelikli gıda kutuları (HelloFresh tipi)",
+          "structure": "Benefit + Easy Terms",
+          "hook_tr": "Sağlıklı yemek pahalı ve zor mu sanıyorsun?",
+          "hook_en": "Think eating healthy is pricey and hard?",
+          "triggers": ["dissonance", "benefits"],
+          "offerComponents": ["fiyat", "sartlar"],
+          "template_tr": "{brand} {product} ile {result}. {o1}, {o2}. İlk kutuda büyük indirim.",
+          "template_en": "With {brand} {product} you {result}. {o1}, {o2}. Big discount on your first box.",
+          "why": { "tr": "Maliyet/zorluk itirazını kırıp esnek abonelik sunuyor.", "en": "Breaks the cost/effort objection and offers flexible subscription." }
+        },
+        {
+          "advertiser": "Takviye & fonksiyonel gıda DTC",
+          "structure": "Authority + Proof",
+          "hook_tr": "{proof}",
+          "hook_en": "{proof}",
+          "triggers": ["authority", "reliability"],
+          "offerComponents": ["deneyim", "garanti"],
+          "template_tr": "{proof}. {brand} {product} ile {result}. {o1}, {o2}.",
+          "template_en": "{proof}. With {brand} {product} you {result}. {o1}, {o2}.",
+          "why": { "tr": "Test/sertifika kanıtı + memnuniyet garantisi.", "en": "Lab/cert proof + satisfaction guarantee." }
+        }
+      ]
+    },
+    "home": {
+      "insights": [
+        { "tr": "Oda dönüşümü (before/after) görseli + 'kurulu teslim' ev kategorisinde kazanıyor.", "en": "Room transformation (before/after) + 'assembled delivery' wins in home." },
+        { "tr": "Ücretsiz kurulum/keşif düşük taahhütlü giriş sağlıyor.", "en": "Free assembly/survey provides a low-commitment entry." },
+        { "tr": "Uzun garanti (2 yıl) yüksek fiyatlı ev ürünlerinde dönüşümü artırıyor.", "en": "A long warranty (2 years) lifts conversion for higher-priced home goods." }
+      ],
+      "winners": [
+        {
+          "advertiser": "Mobilya & dekor DTC",
+          "structure": "BAB + Service",
+          "hook_tr": "Evin dağınık ve sıkışık mı hissettiriyor?",
+          "hook_en": "Home feels cluttered and cramped?",
+          "triggers": ["dissonance", "benefits"],
+          "offerComponents": ["servis", "garanti"],
+          "template_tr": "{brand} {product} ile {result}. {o1}, {o2}. 2 yıl garanti.",
+          "template_en": "With {brand} {product} you {result}. {o1}, {o2}. 2-year warranty.",
+          "why": { "tr": "Mekan acısını çözüp ücretsiz kurulum + garanti ile riski azaltıyor.", "en": "Solves a space pain and de-risks with free assembly + warranty." }
+        },
+        {
+          "advertiser": "Akıllı ev & aydınlatma",
+          "structure": "Social Proof + Price",
+          "hook_tr": "{proof}",
+          "hook_en": "{proof}",
+          "triggers": ["socialproof", "lossaversion"],
+          "offerComponents": ["fiyat", "hiz"],
+          "template_tr": "{proof}. {brand} {product} ile {result}. {o1}, {o2}.",
+          "template_en": "{proof}. With {brand} {product} you {result}. {o1}, {o2}.",
+          "why": { "tr": "Yaygınlık kanıtı + mağaza altı fiyat avantajı.", "en": "Adoption proof + below-store price advantage." }
+        }
+      ]
+    },
+    "education": {
+      "insights": [
+        { "tr": "Mezun başarısı/işe yerleşme oranı (sonuç) eğitim reklamlarında en güçlü kanıt.", "en": "Graduate success / hiring rate (outcome) is the strongest proof in education ads." },
+        { "tr": "Ücretsiz ilk modül/ders düşük taahhütlü giriş sağlıyor.", "en": "A free first module/lesson provides low-commitment entry." },
+        { "tr": "'İlk derste ilk sonuç' vaadi kayıt oranını artırıyor.", "en": "A 'first result in lesson one' promise boosts sign-ups." }
+      ],
+      "winners": [
+        {
+          "advertiser": "Online kurs platformları",
+          "structure": "Outcome + Proof",
+          "hook_tr": "{proof}",
+          "hook_en": "{proof}",
+          "triggers": ["socialproof", "authority"],
+          "offerComponents": ["deneyim", "giris"],
+          "template_tr": "{proof}. {brand} ile {result}. {o1}, {o2}. Ücretsiz ilk modülle başla.",
+          "template_en": "{proof}. With {brand} you {result}. {o1}, {o2}. Start with a free first module.",
+          "why": { "tr": "İşe yerleşme kanıtı + ücretsiz modül ile risksiz deneme.", "en": "Hiring proof + free module for a risk-free trial." }
+        },
+        {
+          "advertiser": "Koçluk & sertifika programları",
+          "structure": "PAS + Easy Entry",
+          "hook_tr": "Onlarca video izledin ama uygulayamadın mı?",
+          "hook_en": "Watched dozens of videos but never applied them?",
+          "triggers": ["dissonance", "smaller"],
+          "offerComponents": ["servis", "giris"],
+          "template_tr": "Nereden başlayacağını mı bilmiyorsun? {brand} ile {result}. {o1}, {o2}.",
+          "template_en": "Don't know where to start? With {brand} you {result}. {o1}, {o2}.",
+          "why": { "tr": "Uygulama eksikliği acısını mentor desteğiyle çözüyor.", "en": "Solves the 'never applied it' pain with mentor support." }
+        }
+      ]
+    },
+    "finance": {
+      "insights": [
+        { "tr": "'Komisyon yok / 3 dakikada hesap' ifadeleri finans uygulamalarında kayıt oranını artırıyor.", "en": "'No commission / 3-minute account' boosts sign-ups for finance apps." },
+        { "tr": "Lisans/denetim & banka düzeyi şifreleme (güven) dönüşümü belirgin artırıyor.", "en": "License/audit & bank-grade encryption (trust) notably lifts conversion." },
+        { "tr": "'Küçük başla (ör. 100 TL)' düşük taahhütlü giriş, ilk yatırımı kolaylaştırıyor.", "en": "'Start small (e.g. $5)' low-commitment entry eases the first investment." }
+      ],
+      "winners": [
+        {
+          "advertiser": "Yatırım & neobank app'leri (Revolut tipi)",
+          "structure": "Trust + Easy Entry",
+          "hook_tr": "Paran enflasyonda mı eriyor?",
+          "hook_en": "Money melting to inflation?",
+          "triggers": ["lossaversion", "trust"],
+          "offerComponents": ["garanti", "giris"],
+          "template_tr": "{brand} ile {result}. {o1}, {o2}. Küçük başla, dakikalar içinde hesap aç.",
+          "template_en": "With {brand} you {result}. {o1}, {o2}. Start small, open an account in minutes.",
+          "why": { "tr": "Kayıp korkusunu güven + küçük taahhütle aksiyona çeviriyor.", "en": "Turns loss fear into action via trust + a small commitment." }
+        },
+        {
+          "advertiser": "Tasarruf & bütçe araçları",
+          "structure": "Benefit + Proof",
+          "hook_tr": "{proof}",
+          "hook_en": "{proof}",
+          "triggers": ["socialproof", "reliability"],
+          "offerComponents": ["fiyat", "servis"],
+          "template_tr": "{proof}. {brand} {product} ile {result}. {o1}, {o2}.",
+          "template_en": "{proof}. With {brand} {product} you {result}. {o1}, {o2}.",
+          "why": { "tr": "Kullanıcı sayısı kanıtı + komisyonsuz değer önerisi.", "en": "User-count proof + a no-commission value prop." }
+        }
+      ]
+    }
+  }
+}
