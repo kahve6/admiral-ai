@@ -3,43 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admiral AI — App</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236366f1'/><text x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>A</text></svg>" />
+  <title>ADMIRA — Kampanyalarım</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>A</text></svg>" />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <a class="logo" href="index.html"><span class="logo-mark">A</span><span>Admiral AI</span></a>
-      <div class="nav-item active" data-view="dashboard"><span class="ico">▤</span><span data-i="nav_dashboard">Pano</span></div>
-      <div class="nav-item" data-view="new"><span class="ico">＋</span><span data-i="nav_new">Yeni Kampanya</span></div>
-      <div class="nav-item" data-view="campaigns"><span class="ico">▦</span><span data-i="nav_campaigns">Kampanyalar</span></div>
-      <div class="nav-item" data-view="team"><span class="ico">👥</span><span data-i="nav_team">Ekip</span></div>
-      <div class="sidebar-spacer"></div>
-      <div class="sidebar-foot">
-        <div id="wsBadge" class="ws-badge"></div>
-        <button class="lang-toggle" id="langToggle">EN</button>
-        <span style="color:var(--dim);font-size:12px">v1.0</span>
+  <div class="topbar">
+    <a class="logo" href="app.html"><span class="logo-mark">A</span><span>ADMIRA</span></a>
+    <div class="user-chip">
+      <div>
+        <div class="user-name" id="userName" style="text-align:right"></div>
+        <div class="user-meta" id="userEmail"></div>
       </div>
-    </aside>
-
-    <main class="main" id="main"><!-- views injected here --></main>
+      <div class="avatar" id="userAvatar"></div>
+      <button class="btn btn-ghost btn-sm" id="btnLogout">Çıkış Yap</button>
+    </div>
   </div>
 
-  <!-- generating overlay -->
-  <div class="gen-overlay" id="genOverlay">
-    <div class="gen-box">
-      <div class="gen-spinner"></div>
-      <h3 id="genTitle">Admiral AI</h3>
-      <div class="gen-steps" id="genSteps"></div>
+  <div class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Kampanyalarım</h1>
+        <p class="page-sub">Meta ve TikTok reklam kampanyalarınızı tek yerden planlayın ve takip edin.</p>
+      </div>
+      <button class="btn btn-primary" id="btnNewCampaign" style="width:auto">+ Kampanya Oluştur</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Toplam Kampanya</div>
+        <div class="stat-value" id="statTotal">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Aktif Kampanya</div>
+        <div class="stat-value" id="statActive">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Toplam Günlük Bütçe</div>
+        <div class="stat-value" id="statBudget">₺0</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-title">Kampanyalar</div>
+    </div>
+    <div id="campaignList" class="campaign-list"></div>
+  </div>
+
+  <!-- ---- kampanya oluşturma sihirbazı ---- -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title" id="modalTitle">Kampanya Oluştur</h3>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="steps-indicator">
+        <div class="step-dot" data-dot="1"></div>
+        <div class="step-dot" data-dot="2"></div>
+        <div class="step-dot" data-dot="3"></div>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="btnBack">← Geri</button>
+        <button class="btn btn-primary" id="btnNext" style="width:auto">İleri →</button>
+      </div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <script src="assets/i18n.js"></script>
-  <script src="assets/api.js"></script>
-  <script src="assets/engine.js"></script>
+  <script src="assets/data.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>

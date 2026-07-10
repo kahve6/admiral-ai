@@ -1,6 +1,6 @@
 name: Deploy via FTP
 
-# Admiral AI is a static site (no build step). On every push to main the site
+# ADMIRA is a static site (no build step). On every push to main the site
 # files are uploaded to the hosting account over FTP. The action keeps a sync
 # state file on the server so only changed files transfer.
 #
@@ -40,10 +40,6 @@ jobs:
             **/.git*/**
             **/.github/**
             .gstack/**
-            inspection/**
-            scripts/**
             **/*.md
             .gitignore
             .ftp-deploy-sync-state.json
-            # never overwrite live user data on the host
-            storage/*.json
