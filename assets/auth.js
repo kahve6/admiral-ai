@@ -17,8 +17,8 @@
   }
 
   // zaten oturum açıksa doğrudan app'e geç
-  fetch('api/auth.php?action=me').then(function (r) { return r.json(); }).then(function (res) {
-    if (res && res.ok) goApp();
+  api('me', {}).then(function (res) {
+    if (res.data && res.data.ok) goApp();
   }).catch(function () {});
 
   var tabLogin = document.getElementById('tabLogin');

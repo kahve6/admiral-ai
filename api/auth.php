@@ -10,6 +10,11 @@ session_set_cookie_params([
 ]);
 session_start();
 header('Content-Type: application/json; charset=utf-8');
+// CDN/proxy katmanlarının bu oturuma özel yanıtı önbelleğe almasını engelle.
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('Vary: Cookie');
 
 $dataDir = __DIR__ . '/../data';
 $usersFile = $dataDir . '/users.json';
@@ -46,17 +51,20 @@ function publicUser(array $u): array {
 if (!is_dir($dataDir)) { mkdir($dataDir, 0755, true); }
 
 $method = $_SERVER['REQUEST_METHOD'];
-$action = $_GET['action'] ?? null;
 
-if ($method === 'GET' && $action === 'me') {
-  if (!empty($_SESSION['user'])) { respond(['ok' => true, 'user' => $_SESSION['user']]); }
-  respond(['ok' => false], 401);
-}
-
+// Oturum kontrolü kasıtlı olarak POST üzerinden yapılır: CDN/edge katmanları
+// GET isteklerini (sorgu dizesine göre) önbelleğe alabilir ve farklı
+// kullanıcılara birbirlerinin oturum durumunu göstererek yanlış
+// index.html <-> app.html yönlendirme döngüsüne yol açabilir.
 if ($method === 'POST') {
   $body = json_decode(file_get_contents('php://input') ?: '{}', true);
   if (!is_array($body)) { $body = []; }
-  $action = $body['action'] ?? $action;
+  $action = $body['action'] ?? null;
+
+  if ($action === 'me') {
+    if (!empty($_SESSION['user'])) { respond(['ok' => true, 'user' => $_SESSION['user']]); }
+    respond(['ok' => false]);
+  }
 
   if ($action === 'register') {
     $name = trim((string)($body['name'] ?? ''));

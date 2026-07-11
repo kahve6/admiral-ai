@@ -13,7 +13,10 @@
     });
   }
 
-  fetch('api/auth.php?action=me').then(function (r) { return r.json(); }).then(function (res) {
+  fetch('api/auth.php', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'me' })
+  }).then(function (r) { return r.json(); }).then(function (res) {
     if (!res || !res.ok) { location.href = 'index.html'; return; }
     initApp(res.user);
   }).catch(function () { location.href = 'index.html'; });
