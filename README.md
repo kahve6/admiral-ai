@@ -41,3 +41,5 @@ Sonrasında `http://localhost:8000` adresini açın.
 ## Yayınlama
 
 Hosting hesabı Git deposunu doğrudan çekiyor (Hostinger otomatik Git dağıtımı). `data/users.json` `.gitignore` ile depodan hariç tutulur, böylece her dağıtımda canlı kullanıcı verisi korunur. `.github/workflows/deploy.yml` üzerindeki FTP workflow'u alternatif/yedek bir dağıtım yoludur; gerekli secrets: `FTP_HOST`, `FTP_USER`, `FTP_PASS`.
+
+Hostinger'ın CDN'i statik dosyalara (`assets/*.css`, `assets/*.js`) uzun (7 gün) cache süresi koyuyor. `index.html`/`app.html`/`tips.html` içindeki script/link etiketleri bu yüzden `?v=N` sürüm parametresi taşır — `assets/` altında değiştirdiğiniz her dosya için bu `?v=` numarasını artırın, aksi halde kullanıcılar eski dosyayı önbellekten görmeye devam edebilir.
