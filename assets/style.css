@@ -87,12 +87,12 @@ input, select, textarea { font-family: inherit; font-size: 14px; }
 .login-tab.active { background: #fff; color: var(--text); box-shadow: var(--shadow-sm); }
 .field { margin-bottom: 16px; }
 .field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--dim); margin-bottom: 6px; }
-.field input, .field select {
+.field input, .field select, .field textarea {
   width: 100%; padding: 10px 12px; border-radius: var(--radius-sm);
   border: 1.5px solid var(--border); background: #fff; color: var(--text); outline: none;
   transition: border-color .15s, box-shadow .15s;
 }
-.field input:focus, .field select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
 .field-error { color: #dc2626; font-size: 12px; margin-top: 6px; display: none; }
 .field-error.show { display: block; }
 
@@ -179,6 +179,7 @@ input, select, textarea { font-family: inherit; font-size: 14px; }
 .badge-tiktok { background: var(--tiktok-soft); color: var(--tiktok); }
 .badge-status-active { background: var(--success-soft); color: var(--success); }
 .badge-status-paused { background: var(--warn-soft); color: var(--warn); }
+.badge-status-draft { background: #f3f4f6; color: #4b5563; }
 .campaign-sub { color: var(--dim); font-size: 12.5px; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .campaign-sub span { display: inline-flex; align-items: center; gap: 4px; }
 
@@ -305,7 +306,23 @@ input, select, textarea { font-family: inherit; font-size: 14px; }
 .review-row .k { color: var(--dim); }
 .review-row .v { font-weight: 650; text-align: right; max-width: 60%; }
 
+/* ---------- reklam ipuçları sayfası ---------- */
+.tips-intro { max-width: 640px; }
+.tips-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 22px; }
+.tip-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: var(--shadow-sm); }
+.tip-card .tip-icon {
+  width: 38px; height: 38px; border-radius: 10px; background: var(--primary-soft); color: var(--primary-dark);
+  display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px;
+}
+.tip-card h3 { margin: 0 0 12px; font-size: 15px; font-weight: 750; }
+.tip-card ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 9px; }
+.tip-card li { font-size: 13px; color: var(--text); line-height: 1.55; }
+.tip-card li b { color: var(--primary-dark); }
+.tip-card.platform-meta .tip-icon { background: var(--meta-soft); color: var(--meta); }
+.tip-card.platform-tiktok .tip-icon { background: var(--tiktok-soft); color: var(--tiktok); }
+
 @media (max-width: 640px) {
+  .tips-grid { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
   .platform-grid { grid-template-columns: 1fr; }

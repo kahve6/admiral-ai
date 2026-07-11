@@ -43,3 +43,5 @@ jobs:
             **/*.md
             .gitignore
             .ftp-deploy-sync-state.json
+            # never overwrite live user data on the host
+            data/*.json

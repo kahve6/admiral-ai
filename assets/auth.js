@@ -1,25 +1,25 @@
-/* ADMIRA — giriş / kayıt (yerel demo kimlik doğrulama) */
+/* ADMIRA — giriş / kayıt (data/users.json destekli sunucu oturumu) */
 (function () {
-  var USERS_KEY = 'admira_users';
-  var SESSION_KEY = 'admira_session';
-
-  function getUsers() {
-    try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
-    catch (e) { return []; }
-  }
-  function saveUsers(list) { localStorage.setItem(USERS_KEY, JSON.stringify(list)); }
-  function setSession(user) { localStorage.setItem(SESSION_KEY, JSON.stringify({ name: user.name, email: user.email })); }
-
+  function el(sel) { return document.querySelector(sel); }
   function toast(msg) {
-    var elx = document.getElementById('toast');
+    var elx = el('#toast');
     elx.textContent = msg; elx.classList.add('show');
     clearTimeout(elx._t); elx._t = setTimeout(function () { elx.classList.remove('show'); }, 2600);
   }
-
   function goApp() { location.href = 'app.html'; }
 
+  function api(action, payload) {
+    return fetch('api/auth.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ action: action }, payload || {}))
+    }).then(function (r) { return r.json().then(function (data) { return { status: r.status, data: data }; }); });
+  }
+
   // zaten oturum açıksa doğrudan app'e geç
-  if (localStorage.getItem(SESSION_KEY)) { goApp(); return; }
+  fetch('api/auth.php?action=me').then(function (r) { return r.json(); }).then(function (res) {
+    if (res && res.ok) goApp();
+  }).catch(function () {});
 
   var tabLogin = document.getElementById('tabLogin');
   var tabSignup = document.getElementById('tabSignup');
@@ -37,42 +37,38 @@
   tabSignup.onclick = function () { showTab('signup'); };
 
   document.getElementById('btnSignup').onclick = function () {
+    var btn = this;
     var name = document.getElementById('su_name').value.trim();
     var email = document.getElementById('su_email').value.trim().toLowerCase();
     var pass = document.getElementById('su_pass').value;
     if (!name || !email || !pass) { toast('Lütfen tüm alanları doldurun.'); return; }
     if (pass.length < 4) { toast('Şifre en az 4 karakter olmalı.'); return; }
-    var users = getUsers();
-    if (users.some(function (u) { return u.email === email; })) {
-      toast('Bu e-posta ile zaten bir hesap var. Giriş yapın.');
-      showTab('login');
-      return;
-    }
-    users.push({ name: name, email: email, pass: btoa(pass) });
-    saveUsers(users);
-    setSession({ name: name, email: email });
-    goApp();
+    btn.disabled = true;
+    api('register', { name: name, email: email, password: pass }).then(function (res) {
+      btn.disabled = false;
+      if (res.data.ok) { goApp(); return; }
+      if (res.data.error === 'email_taken') { toast('Bu e-posta ile zaten bir hesap var. Giriş yapın.'); showTab('login'); }
+      else toast('Kayıt başarısız, tekrar deneyin.');
+    }).catch(function () { btn.disabled = false; toast('Sunucuya ulaşılamadı.'); });
   };
 
   document.getElementById('btnLogin').onclick = function () {
+    var btn = this;
     var email = document.getElementById('li_email').value.trim().toLowerCase();
     var pass = document.getElementById('li_pass').value;
     if (!email || !pass) { toast('Lütfen tüm alanları doldurun.'); return; }
-    var users = getUsers();
-    var match = users.find(function (u) { return u.email === email && u.pass === btoa(pass); });
-    if (!match) { toast('E-posta veya şifre hatalı.'); return; }
-    setSession(match);
-    goApp();
+    btn.disabled = true;
+    api('login', { email: email, password: pass }).then(function (res) {
+      btn.disabled = false;
+      if (res.data.ok) { goApp(); return; }
+      toast('E-posta veya şifre hatalı.');
+    }).catch(function () { btn.disabled = false; toast('Sunucuya ulaşılamadı.'); });
   };
 
-  document.getElementById('btnDemo').onclick = function () {
-    var demo = { name: 'Demo Kullanıcı', email: 'demo@admira.app' };
-    var users = getUsers();
-    if (!users.some(function (u) { return u.email === demo.email; })) {
-      users.push({ name: demo.name, email: demo.email, pass: btoa('demo') });
-      saveUsers(users);
-    }
-    setSession(demo);
-    goApp();
+  document.getElementById('btnDemo').onclick = function (e) {
+    e.preventDefault();
+    api('demo', {}).then(function (res) {
+      if (res.data.ok) goApp(); else toast('Demo hesabı başlatılamadı.');
+    }).catch(function () { toast('Sunucuya ulaşılamadı.'); });
   };
 })();

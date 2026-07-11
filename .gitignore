@@ -5,6 +5,9 @@
 .ftp-deploy-sync-state.json
 *.log
 
+# Runtime user datastore (lives on the host, never in git)
+data/users.json
+
 # OS junk
 .DS_Store
 Thumbs.db
