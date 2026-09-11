@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADMIRA — Bütçeleme ve Test Yönetimi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>A</text></svg>" />
+  <link rel="stylesheet" href="assets/style.css?v=4" />
+  <style>
+    .budget-container { max-width: 100% !important; width: 100% !important; padding: 24px 32px 80px !important; }
+    .budget-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .budget-card h2 { font-size: 18px; font-weight: 800; margin-top: 0; margin-bottom: 20px; border-bottom: 1.5px solid var(--primary-soft); padding-bottom: 10px; color: var(--text); }
+    
+    .budget-section { margin-bottom: 22px; }
+    .budget-section:last-child { margin-bottom: 0; }
+    .budget-section h3 { font-size: 14.5px; font-weight: 700; margin-top: 0; margin-bottom: 10px; color: var(--primary); }
+    .budget-section p { font-size: 13.5px; line-height: 1.6; color: #374151; margin: 0 0 10px; }
+    .budget-section ul { margin: 0 0 16px; padding-left: 20px; font-size: 13.5px; color: #4b5563; }
+    .budget-section li { margin-bottom: 6px; line-height: 1.5; }
+    .budget-section strong { color: var(--text); }
+    
+    /* Örnek Hesaplama Kutusu */
+    .calculation-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-size: 13.5px; margin-bottom: 16px; border-left: 4px solid var(--primary); }
+    .calculation-box strong { color: var(--primary-dark); }
+    
+    /* Zaman Çizelgesi (Timeline) */
+    .timeline { position: relative; padding-left: 24px; border-left: 2.5px solid var(--primary-soft); margin: 20px 0 10px 8px; }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-badge { position: absolute; left: -33px; top: 2px; width: 15px; height: 15px; border-radius: 50%; background: var(--primary); border: 3px solid #fff; box-shadow: var(--shadow-sm); }
+    .timeline-time { font-size: 11.5px; font-weight: 700; color: var(--primary); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .timeline-title { font-size: 13.5px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .timeline-content { font-size: 13px; color: #475569; line-height: 1.5; }
+    
+    .badge-rule { background: var(--warn-soft); border: 1px solid #fde8c3; color: #a16207; padding: 3px 8px; border-radius: 4px; font-size: 11.5px; font-weight: 700; display: inline-block; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="logo" href="app.html"><span class="logo-mark">A</span><span>ADMIRA</span></a>
+      <nav class="main-nav">
+        <a class="nav-link" href="app.html">📋 Rakip Analizleri</a>
+        <a class="nav-link" href="reklam-kutuphanesi.html">🔗 Reklam Kütüphanesi</a>
+        <a class="nav-link active" href="butceleme.html">💰 Bütçeleme</a>
+        <a class="nav-link" href="calisma-yontemi.html">📖 Çalışma Yöntemi</a>
+        <a class="nav-link" href="tips.html">💡 Reklam İpuçları</a>
+        <a class="nav-link" href="cevt.html" target="_blank" rel="noopener">📡 CEvT</a>
+      </nav>
+    </div>
+    <div class="user-chip">
+      <div>
+        <div class="user-name" id="userName" style="text-align:right">Misafir</div>
+        <div class="user-meta" id="userEmail">admira</div>
+      </div>
+      <div class="avatar" id="userAvatar">A</div>
+      <button class="btn btn-ghost btn-sm" id="btnLogout">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <div class="budget-container">
+    <div class="page-head" style="margin-bottom: 24px;">
+      <div>
+        <h1 class="page-title">Bütçeleme ve Test Yönetimi</h1>
+        <p class="page-sub">E-ticaret reklam bütçenizi yönetirken, yeni kreatifleri test ederken ve öğrenme sürecini optimize ederken izlemeniz gereken matematiksel formüller.</p>
+      </div>
+    </div>
+
+    <!-- 1. Bütçeleme Mantığı -->
+    <div class="budget-card">
+      <h2>1. Bütçeleme Mantığı (Hedef EBM / Target CPA)</h2>
+      <div class="budget-section">
+        <p>Giyim e-ticaretinde bütçe rastgele belirlenmez; <strong>Edinme Başına Maliyet (EBM - CPA)</strong> hedefine göre kurgulanır.</p>
+        
+        <div class="calculation-box">
+          <strong>📝 Örnek Hesaplama:</strong><br>
+          1.300 TL'lik bir pantolonun maliyeti ve kargosu 600 TL ise, brüt kar 700 TL'dir. Reklamcının bu ürünü satmak için harcayabileceği maksimum tutar (<strong>Başa Baş EBM</strong>) 700 TL'dir. Kar edebilmek için <strong>Hedef EBM</strong> 350-400 TL civarında tutulmaya çalışılır.
+        </div>
+        
+        <p><span class="badge-rule">Günlük Test Bütçesi Kuralı:</span> Yeni bir reklam test edilirken, günlük bütçe genellikle Hedef EBM'nin <strong>3 ila 5 katı</strong> olarak ayarlanır. Yani hedef CPA 400 TL ise, reklam setine günlük 1.200 TL - 2.000 TL bütçe verilir ki algoritma günde en az 3-5 satış yapacak veriyi toplayabilsin.</p>
+      </div>
+    </div>
+
+    <!-- 2. Test Süreci ve Sabır Süreleri -->
+    <div class="budget-card">
+      <h2>2. Test Süreci ve Sabır Süreleri</h2>
+      <div class="budget-section">
+        <p>Giyim sektöründe "Winning Creative" (Kazanan Reklam) bulmak için standart bir kronolojik test prosedürü uygulanır. Bu sıralama ihlal edildiğinde algoritma bozulur.</p>
+        
+        <div class="timeline">
+          <!-- Adım 1 -->
+          <div class="timeline-item">
+            <div class="timeline-badge"></div>
+            <div class="timeline-time">ADIM 1: BAŞLANGIÇ</div>
+            <div class="timeline-title">Test Kurulumu: Geniş Hedefleme ve Dinamik Kreatif</div>
+            <div class="timeline-content">
+              Reklam, ilgi alanı girmeden (Broad) tamamen algoritmaya bırakılarak açılır. Aynı kampanya içine 3 farklı video, 2 farklı metin (hook) yüklenerek Meta'nın Dinamik Kreatif Testi (DCT) modülü kullanılır.
+            </div>
+          </div>
+          
+          <!-- Adım 2 -->
+          <div class="timeline-item">
+            <div class="timeline-badge"></div>
+            <div class="timeline-time">ADIM 2: 0 - 24 SAAT</div>
+            <div class="timeline-title">Dokunmama Kuralı</div>
+            <div class="timeline-content">
+              Bu aşamada sonuçlar çok dalgalıdır. Tıklama maliyetleri (TBM) yüksek veya satış sıfır olsa bile reklam kesinlikle kapatılmaz veya bütçesi değiştirilmez.
+            </div>
+          </div>
+          
+          <!-- Adım 3 -->
+          <div class="timeline-item">
+            <div class="timeline-badge"></div>
+            <div class="timeline-time">ADIM 3: 24 - 48 SAAT</div>
+            <div class="timeline-title">Erken Metrik Kontrolü</div>
+            <div class="timeline-content">
+              Satış gelmemiş olabilir ancak "Tıklama Oranı (CTR)" ve "Sepete Ekleme" metriklerine bakılır. CTR %1.5'in altındaysa, video ilk 3 saniyede izleyiciyi yakalayamamış demektir.
+            </div>
+          </div>
+          
+          <!-- Adım 4 -->
+          <div class="timeline-item">
+            <div class="timeline-badge"></div>
+            <div class="timeline-time">ADIM 4: 72 SAAT VE SONRASI</div>
+            <div class="timeline-title">Kesin Karar Aşaması (Kill or Scale)</div>
+            <div class="timeline-content">
+              Reklam toplamda "Hedef EBM'nin 2 katı" kadar para harcadıysa (Örn: 800 TL) ve hiç satış getirmediyse reklam acımasızca kapatılır (Kill). Eğer EBM hedefin altında (karlı) geliyorsa, bütçe %20 artırılarak veya yeni kampanyaya kopyalanarak ölçeklenir (Scale).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Öğrenme Eğrisi -->
+    <div class="budget-card">
+      <h2>3. Öğrenme Eğrisi (Learning Phase) Yönetimi</h2>
+      <div class="budget-section">
+        <p>Meta'nın algoritmasının tam optimize olabilmesi için bir reklam setinin 7 gün içinde <strong>50 dönüşüm (satış)</strong> alması gerekir. Giyim firmaları bu eşiği aşmak için şu yöntemleri kullanır:</p>
+        <ul>
+          <li><strong>Bütçe Yetersizse:</strong> Günde 7-8 satış getirecek bütçeleri yoksa, kampanyayı "Satın Alma" yerine "Sepete Ekleme" (Add to Cart) optimizasyonuna çekerler. Sepete ekleme işlemi daha ucuz ve sık olduğu için algoritma 50 rakamına çabuk ulaşır ve öğrenme aşamasından çıkar.</li>
+          <li><strong>Hesap Konsolidasyonu:</strong> Eskiden yapılan "10 farklı ilgi alanı için 10 farklı reklam seti" mantığı bitmiştir. Rakipleriniz bütçeyi bölmemek için Advantage+ Alışveriş Kampanyaları (ASC+) kullanarak tüm bütçeyi tek veya iki kampanyada toplar.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Oturum kontrolü ve çıkış yapma işlemleri için JS -->
+  <script>
+    (function () {
+      function el(sel) { return document.querySelector(sel); }
+      
+      fetch('api/auth.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'me' })
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (!res || !res.ok) { location.href = 'index.html'; return; }
+        el('#userName').textContent = res.user.name;
+        el('#userEmail').textContent = res.user.email;
+        el('#userAvatar').textContent = (res.user.name || '?').trim().charAt(0).toUpperCase();
+      }).catch(function () { location.href = 'index.html'; });
+
+      el('#btnLogout').onclick = function () {
+        fetch('api/auth.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'logout' })
+        }).then(function () { location.href = 'index.html'; }).catch(function () { location.href = 'index.html'; });
+      };
+    })();
+  </script>
+</body>
+</html>

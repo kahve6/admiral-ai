@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #4f46e5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-box {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12.5px;
+      margin-bottom: 14px;
+      line-height: 1.4;
+      color: #475569;
+    }
+    .btn {
+      width: 100%;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn:hover {
+      background: #4338ca;
+    }
+    .btn:disabled {
+      background: #cbd5e1;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+    .footer {
+      font-size: 10px;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 14px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h3>⚡ ADMIRA Kaydedici</h3>
+  <div class="status-box" id="statusMessage">
+    Analiz başlatılıyor, lütfen bekleyin...
+  </div>
+  <button class="btn" id="btnSave" disabled>Kaydet</button>
+  <div class="footer">ADMIRA — Kampanya & Rakip Planlayıcı</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

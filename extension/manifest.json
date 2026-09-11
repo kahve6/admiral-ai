@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "ADMIRA Reklam Kaydedici",
+  "version": "1.0",
+  "description": "Meta Reklam Kütüphanesindeki reklamları tek tıkla ADMIRA paneline kaydeder.",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://www.facebook.com/ads/library/*",
+    "https://admira.tiotr.com/*",
+    "http://localhost/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.facebook.com/ads/library/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

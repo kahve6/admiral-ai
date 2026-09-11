@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADMIRA — Çalışma Yöntemi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>A</text></svg>" />
+  <link rel="stylesheet" href="assets/style.css?v=4" />
+  <style>
+    .method-container { max-width: 100% !important; width: 100% !important; padding: 24px 32px 80px !important; }
+    
+    .section-divider {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 32px 0 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    
+    .method-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .method-card h2 { font-size: 18px; font-weight: 800; margin-top: 0; margin-bottom: 20px; border-bottom: 1.5px solid var(--primary-soft); padding-bottom: 10px; color: var(--text); }
+    .method-section { margin-bottom: 22px; }
+    .method-section:last-child { margin-bottom: 0; }
+    .method-section h3 { font-size: 14.5px; font-weight: 700; margin-top: 0; margin-bottom: 10px; color: var(--primary); }
+    .method-section p { font-size: 13.5px; line-height: 1.6; color: #374151; margin: 0 0 10px; }
+    .method-section ul { margin: 0 0 16px; padding-left: 20px; font-size: 13.5px; color: #4b5563; }
+    .method-section li { margin-bottom: 6px; line-height: 1.5; }
+    .method-section strong { color: var(--text); }
+    .btn-link { display: inline-flex; align-items: center; gap: 4px; color: var(--primary); font-weight: 600; text-decoration: underline; font-size: 13px; }
+    .badge-tool { background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: var(--dim); display: inline-block; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="logo" href="app.html"><span class="logo-mark">A</span><span>ADMIRA</span></a>
+      <nav class="main-nav">
+        <a class="nav-link" href="app.html">📋 Rakip Analizleri</a>
+        <a class="nav-link" href="reklam-kutuphanesi.html">🔗 Reklam Kütüphanesi</a>
+        <a class="nav-link" href="butceleme.html">💰 Bütçeleme</a>
+        <a class="nav-link active" href="calisma-yontemi.html">📖 Çalışma Yöntemi</a>
+        <a class="nav-link" href="tips.html">💡 Reklam İpuçları</a>
+        <a class="nav-link" href="cevt.html" target="_blank" rel="noopener">📡 CEvT</a>
+      </nav>
+    </div>
+    <div class="user-chip">
+      <div>
+        <div class="user-name" id="userName" style="text-align:right">Misafir</div>
+        <div class="user-meta" id="userEmail">admira</div>
+      </div>
+      <div class="avatar" id="userAvatar">A</div>
+      <button class="btn btn-ghost btn-sm" id="btnLogout">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <div class="method-container">
+    <div class="page-head" style="margin-bottom: 24px;">
+      <div>
+        <h1 class="page-title">Çalışma Yöntemi: E-Ticaret Rakip Analizi ve Reklam Stratejisi Kılavuzu</h1>
+        <p class="page-sub">Rakiplerinizi analiz ederken, pazar açıklarını tespit ederken ve kendi özel altyapınızı avantaja dönüştürürken izlemeniz gereken tüm adımlar, araçlar ve teknik metrikler.</p>
+      </div>
+    </div>
+
+    <!-- BÖLÜM I -->
+    <div class="section-divider">BÖLÜM I: Dış Analiz ve Rakip İstihbaratı</div>
+
+    <!-- 1. Reklam ve Kreatif Analizi -->
+    <div class="method-card">
+      <h2>1. Reklam ve Kreatif Analizi (Meta, Google, TikTok)</h2>
+      
+      <div class="method-section">
+        <h3>Meta Reklam Kütüphanesi (Meta Ad Library)</h3>
+        <span class="badge-tool">Erişim: <a href="https://facebook.com/ads/library" target="_blank" class="btn-link">facebook.com/ads/library</a></span>
+        <p><strong>Yöntem:</strong> Konumu "Türkiye", kategoriyi "Tüm Reklamlar" seçip rakip markanın profilini aratın.</p>
+        <ul>
+          <li><strong>Yayın Süresi (En Önemli Kriter):</strong> Sayfayı aşağı kaydırarak en eski tarihli aktif reklamları bulun. 30–60 günden uzun süredir kesintisiz yayında olan reklamlar, markaya pozitif getiri (ROAS) sağlayan "kazanan kreatiflerdir" (winning creatives).</li>
+          <li><strong>Format Dağılımı:</strong> Statik görsel, manken üzerinde dikey video (9:16), dönen kart (carousel) veya dinamik katalog dağılımını tespit edin.</li>
+          <li><strong>Metin ve Kanca (Hook):</strong> Reklam metinlerindeki ana teklifleri ("Sepette %20 İndirim", "3 Al 2 Öde", "Stoklarla Sınırlı", "Aynı Gün Kargo") not edin.</li>
+        </ul>
+      </div>
+
+      <div class="method-section">
+        <h3>Google Reklam Şeffaflığı Merkezi (Google Ads Transparency Center)</h3>
+        <span class="badge-tool">Erişim: <a href="https://adstransparency.google.com" target="_blank" class="btn-link">adstransparency.google.com</a></span>
+        <p><strong>Yöntem:</strong> Rakibin web sitesi alan adını (domain) aratın.</p>
+        <ul>
+          <li><strong>Metrikler:</strong> Metin reklamlarında kullanılan anahtar kelime başlıkları, YouTube video reklamları ve Görüntülü Reklam Ağı (GDN) banner stratejilerini inceleyin.</li>
+        </ul>
+      </div>
+
+      <div class="method-section">
+        <h3>TikTok Creative Center</h3>
+        <span class="badge-tool">Erişim: <a href="https://ads.tiktok.com/business/creativecenter" target="_blank" class="btn-link">ads.tiktok.com/business/creativecenter</a></span>
+        <ul>
+          <li><strong>Metrikler:</strong> Giyim-Tekstil sektöründe Türkiye pazarında en çok tıklanan video formatları, trend sesler ve ilk 3 saniye tutunma oranları yüksek olan kanca modelleri.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. Trafik Kaynakları, Hacim ve Talep Analizi -->
+    <div class="method-card">
+      <h2>2. Trafik Kaynakları, Hacim ve Talep Analizi</h2>
+      
+      <div class="method-section">
+        <h3>Similarweb & Alternatif Trafik Araçları (Ubersuggest / SEMrush)</h3>
+        <span class="badge-tool">Erişim: similarweb.com, ubersuggest.com veya Chrome eklentileri</span>
+        <ul>
+          <li><strong>Trafik Kanalları Dağılımı:</strong> Ziyaretçilerin yüzde kaçı Sosyal Medyadan, Doğrudan (Direct), Arama Motorundan (Organik/Ücretli Arama) geliyor? <em>(Not: Aylık trafiği 50 binin altındaki siteler Similarweb'de görünmezse Ubersuggest veya SEMrush ile arama trafiği tahminlerini kontrol edin).</em></li>
+          <li><strong>Sosyal Medya Dağılımı:</strong> Sosyal trafiğin ağırlıklı olarak Instagram, TikTok veya YouTube kaynaklı olup olmadığını belirleyin.</li>
+        </ul>
+      </div>
+
+      <div class="method-section">
+        <h3>Google Anahtar Kelime Planlayıcı & Google Trends</h3>
+        <span class="badge-tool">Erişim: Google Ads Paneli ve <a href="https://trends.google.com" target="_blank" class="btn-link">trends.google.com</a></span>
+        <ul>
+          <li><strong>Metrikler:</strong> Rakip marka isimlerinin aylık aranma hacimleri ve "modal tişört", "baggy keten pantolon", "oversize gömlek" gibi ürün bazlı dönemsel arama trendleri.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. Fiyatlandırma, Kampanya ve Sepet Ortalaması Analizi -->
+    <div class="method-card">
+      <h2>3. Fiyatlandırma, Kampanya ve Sepet Ortalaması (AOV) Analizi</h2>
+      
+      <div class="method-section">
+        <ul>
+          <li><strong>Kargo ve İndirim Eşikleri:</strong> Rakiplerin "Ücretsiz Kargo" alt limitini (Örn: "1.000 TL ve üzerine kargo bedava") ve sepet indirim baremlerini çıkarın.</li>
+          <li><strong>Fiyat Segmenti:</strong> Temel kategorilerde (basic tişört, kargo pantolon) taban ve tavan fiyat aralıklarını belirleyin.</li>
+          <li><strong>Pop-up, E-Posta ve SMS Otomasyonları:</strong> Rakip sitelere giriş yapıp bültene kaydolun veya sepeti terk edin. Hoş geldin indirimi oranlarını (%10, 100 TL vb.) ve terk edilmiş sepet SMS/e-posta kurgularını gözlemleyin.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4. Site Altyapısı, Pikseller ve Açılış Sayfası Deneyimi -->
+    <div class="method-card">
+      <h2>4. Site Altyapısı, Pikseller ve Açılış Sayfası (Landing Page) Deneyimi</h2>
+      
+      <div class="method-section">
+        <h3>Wappalyzer veya BuiltWith (Chrome Eklentileri)</h3>
+        <ul>
+          <li><strong>E-ticaret Altyapısı:</strong> Rakibin hazır sistem (Shopify, Ticimax, İkas vb.) mi yoksa özel yazılım mı kullandığını görün.</li>
+          <li><strong>Yüklü Pikseller:</strong> Sitede Meta Pixel dışında TikTok Pixel, Google Tag Manager, Criteo veya Pinterest Tag olup olmadığını doğrulayın. Bu veriler hangi platformlara bütçe ayırdıklarını gösterir.</li>
+        </ul>
+      </div>
+
+      <div class="method-section">
+        <h3>Google PageSpeed Insights</h3>
+        <span class="badge-tool">Erişim: <a href="https://pagespeed.web.dev" target="_blank" class="btn-link">pagespeed.web.dev</a></span>
+        <ul>
+          <li><strong>Metrikler:</strong> Rakiplerin reklam yönlendirdiği açılış sayfalarının mobil hız puanını (Core Web Vitals) test edin. Yavaş yüklenme sürelerine sahip hantal hazır altyapıları tespit edin.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 5. Müşteri Zafiyetlerini Tespit Etme -->
+    <div class="method-card">
+      <h2>5. Müşteri Zafiyetlerini Tespit Etme (Açık Analizi)</h2>
+      
+      <div class="method-section">
+        <h3>Şikayetvar ve Google Haritalar / İşletme Yorumları</h3>
+        <span class="badge-tool">Erişim: sikayetvar.com ve Google Haritalar</span>
+        <ul>
+          <li><strong>Odaklanılacak Veriler:</strong> En çok tekrar eden operasyonel şikayetler (Örn: "Para iadesi yapılmıyor/sadece kupon veriliyor", "WhatsApp destek hattı yanıt vermiyor", "Kumaş yıkamada çekti/kalıplar uyumsuz").</li>
+          <li><strong>Kullanım Alanı:</strong> Bu şikayetleri kendi reklam metinlerinizde doğrudan avantaja dönüştürün (Örn: "Sorgusuz Şartsız Para İadesi", "Aynı Gün Hızlı Destek", "Yıkamada Formunu Koruyan Kumaş").</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BÖLÜM II -->
+    <div class="section-divider">BÖLÜM II: İç Optimizasyon ve Kendi Altyapınızı Avantaja Dönüştürme (CRO & Teknik Kurulum)</div>
+
+    <!-- 6. Meta Conversions API ve Sunucu Taraflı Takip -->
+    <div class="method-card">
+      <h2>6. Meta Conversions API (CAPI) ve Sunucu Taraflı Takip (Server-Side)</h2>
+      
+      <div class="method-section">
+        <h3>Veri Kaybını Önleme</h3>
+        <p>Tarayıcı tabanlı standart Meta Pixel'in iOS kısıtlamaları ve AdBlocker'lar sebebiyle kaçırdığı verileri önlemek için doğrudan sunucudan sunucuya (Server-to-Server) olay gönderimi yapın.</p>
+      </div>
+
+      <div class="method-section">
+        <h3>Event Match Quality (EMQ) Maksimizasyonu</h3>
+        <p>Sunucudan olay gönderirken (ViewContent, AddToCart, InitiateCheckout, Purchase) kullanıcı parametrelerini hash'lenmiş olarak (SHA-256) ekleyin:</p>
+        <p><em>E-posta (em), Telefon (ph), Ad/Soyad (fn/ln), IP Adresi (client_ip_address), Tarayıcı Kullanıcı Aracısı (client_user_agent).</em></p>
+        <p>Bu eşleştirme kalitesi EMQ skorunu 8.0/10 üzerine çıkararak reklam maliyetlerinizi (CPA) %15–25 düşürür.</p>
+      </div>
+    </div>
+
+    <!-- 7. Kusursuz ve Dinamik XML Feed -->
+    <div class="method-card">
+      <h2>7. Kusursuz ve Dinamik XML Feed (Ürün Kataloğu)</h2>
+      
+      <div class="method-section">
+        <h3>Anlık Veri Akışı</h3>
+        <p>Google Alışveriş, Google PMax ve Meta Dinamik Ürün Reklamları (DPA) için stok, fiyat ve varyasyon verilerini anlık güncelleyen özel XML beslemesi üretin.</p>
+      </div>
+
+      <div class="method-section">
+        <h3>Kombin ve Bundle Entegrasyonu</h3>
+        <p>Özel altyapınızdaki "Kombin Yap" modülünü katalog feed'i ile eşleştirerek Meta üzerinde doğrudan kombin satışı odaklı dinamik reklamlar kurgulayın.</p>
+      </div>
+    </div>
+
+    <!-- 8. Hızlı ve Pürüzsüz Tek Sayfa Ödeme -->
+    <div class="method-card">
+      <h2>8. Hızlı ve Pürüzsüz Tek Sayfa Ödeme (One-Page Checkout)</h2>
+      
+      <div class="method-section">
+        <h3>Dönüşüm Oranı Optimizasyonu (CRO)</h3>
+        <p>Rakiplerin çok adımlı, hantal ödeme sayfalarının aksine; adres, kargo ve ödeme adımlarını tek ekranda toplayan, gereksiz form alanlarından arındırılmış bir akış kodlayın.</p>
+      </div>
+
+      <div class="method-section">
+        <h3>Mobil Yüklenme Hızı</h3>
+        <p>Reklamdan gelen kullanıcının siteye 1.5 saniyenin altında girmesini sağlayarak hemen çıkma oranını (Bounce Rate) minimize edin ve Meta/Google kalite puanlarını yükseltin.</p>
+      </div>
+    </div>
+
+    <!-- 9. Reklam Kurgusu ve Huni -->
+    <div class="method-card">
+      <h2>9. Reklam Kurgusu ve Huni (Funnel) Uygulaması</h2>
+      
+      <div class="method-section">
+        <ul>
+          <li><strong>Üst Huni (Top of Funnel - Soğuk Kitle):</strong> 9:16 formatında, ürün dokusunu ve kalıbını gösteren UGC/Reels tarzı videolar.</li>
+          <li><strong>Orta Huni (Middle of Funnel - Değerlendirme):</strong> "Kombin Olarak Satın Al", "İlk Siparişe Özel İndirim" ve "Sepet Ortalamasını Yükselten (AOV)" teklifler.</li>
+          <li><strong>Alt Huni (Bottom of Funnel - Yeniden Pazarlama):</strong> Dinamik Ürün Reklamları (DPA) ve rakiplerin zafiyetlerini vuran "Koşulsuz Para İadesi / Kolay Değişim" mesajları.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Oturum kontrolü ve çıkış yapma işlemleri için JS -->
+  <script>
+    (function () {
+      function el(sel) { return document.querySelector(sel); }
+      
+      fetch('api/auth.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'me' })
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (!res || !res.ok) { location.href = 'index.html'; return; }
+        el('#userName').textContent = res.user.name;
+        el('#userEmail').textContent = res.user.email;
+        el('#userAvatar').textContent = (res.user.name || '?').trim().charAt(0).toUpperCase();
+      }).catch(function () { location.href = 'index.html'; });
+
+      el('#btnLogout').onclick = function () {
+        fetch('api/auth.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'logout' })
+        }).then(function () { location.href = 'index.html'; }).catch(function () { location.href = 'index.html'; });
+      };
+    })();
+  </script>
+</body>
+</html>

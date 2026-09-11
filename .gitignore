@@ -7,6 +7,11 @@
 
 # Runtime user datastore (lives on the host, never in git)
 data/users.json
+data/ads_*.json
+data/competitors_*.json
+
+# Local FTP sync credentials (see .ftp-sync.example.json for the template)
+.ftp-sync.json
 
 # OS junk
 .DS_Store

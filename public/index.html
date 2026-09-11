@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADMIRA — Giriş</title>
+  <meta name="description" content="ADMIRA — Meta ve TikTok reklam kampanyalarınızı planlayın." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>A</text></svg>" />
+  <link rel="stylesheet" href="assets/style.css?v=4" />
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-wrap">
+      <div class="login-brand">
+        <span class="logo-mark">A</span>
+        <span>ADMIRA</span>
+      </div>
+
+      <div class="login-card">
+        <h1 class="login-title">Hoş geldiniz</h1>
+        <p class="login-sub">Meta ve TikTok kampanyalarınızı tek yerden planlayın.</p>
+
+        <div id="formLogin">
+          <div class="field">
+            <label>Kullanıcı Adı</label>
+            <input type="text" id="li_email" placeholder="admira" autocomplete="username" />
+          </div>
+          <div class="field">
+            <label>Şifre</label>
+            <input type="password" id="li_pass" placeholder="••••••••" autocomplete="current-password" />
+          </div>
+          <button class="btn btn-primary" id="btnLogin">Giriş Yap</button>
+        </div>
+      </div>
+
+      <p class="login-foot">© 2026 ADMIRA — Bu bir yerel demo ortamıdır, verileriniz yalnızca tarayıcınızda saklanır.</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/auth.js?v=4"></script>
+</body>
+</html>

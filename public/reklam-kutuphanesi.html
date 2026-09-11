@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADMIRA — Reklam Kütüphanesi Takipçisi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>A</text></svg>" />
+  <link rel="stylesheet" href="assets/style.css?v=4" />
+  <style>
+    .ad-container { max-width: 100% !important; width: 100% !important; padding: 24px 32px 80px !important; display: grid; grid-template-columns: 1.7fr 1.3fr; gap: 24px; }
+    @media (max-width: 900px) { .ad-container { grid-template-columns: 1fr; } }
+    
+    .ad-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+    .ad-card h2 { font-size: 16px; font-weight: 800; margin-top: 0; margin-bottom: 16px; color: var(--text); border-bottom: 2px solid var(--primary-soft); padding-bottom: 8px; }
+    
+    /* Accordion Ads list */
+    .ad-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+    .ad-card-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s; box-shadow: var(--shadow-sm); }
+    .ad-card-item.active { border-color: var(--primary); }
+    
+    .ad-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; user-select: none; background: #fff; transition: background 0.15s; }
+    .ad-header:hover { background: #f8fafc; }
+    
+    .ad-title-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .ad-id-badge { font-family: monospace; font-size: 11px; background: #f1f5f9; color: #475569; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
+    a.ad-id-badge:hover { background: #e2e8f0; }
+    .ad-competitor-name { font-size: 14px; font-weight: 800; color: var(--text); }
+    .ad-date-badge { font-size: 12px; color: var(--dim); }
+    .ad-cta-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: var(--primary-soft); color: var(--primary-dark); white-space: nowrap; }
+
+    .ad-meta-badges { display: flex; align-items: center; gap: 12px; }
+    .filter-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+    .filter-row .field { margin-bottom: 0; min-width: 220px; flex: 1; }
+    .ad-chevron { font-size: 14px; color: var(--dim); transition: transform 0.2s; margin-left: 6px; }
+    .ad-card-item.active .ad-chevron { transform: rotate(180deg); }
+    
+    .ad-content { display: none; padding: 18px; border-top: 1px solid var(--border); background: #fafafa; }
+    .ad-card-item.active .ad-content { display: block; }
+    
+    .ad-copy-box { font-size: 13.5px; color: var(--text); background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; line-height: 1.5; white-space: pre-wrap; margin-bottom: 12px; }
+    .ad-media-box { margin-top: 12px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; max-width: 320px; background: #fff; }
+    .ad-media-box img, .ad-media-box video { max-width: 100%; display: block; height: auto; }
+    
+    .idea-box { background: var(--success-soft); border-left: 4px solid var(--success); color: #0f5132; padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 14px; }
+    .discussion-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); height: fit-content; }
+    .discussion-section { margin-bottom: 14px; font-size: 12.5px; line-height: 1.5; color: #475569; }
+    .discussion-section h3 { font-size: 13px; font-weight: 700; margin: 0 0 6px; color: var(--text); }
+    .discussion-section ul { margin: 0; padding-left: 16px; }
+    .discussion-section li { margin-bottom: 3px; }
+    
+    .form-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .form-row { flex-direction: column; } }
+
+    /* Ekleme Aktivitesi ısı haritası (GitHub katkı grafiği tarzı) */
+    .heatmap-card .ad-card { margin-bottom: 20px; }
+    .heatmap-scroll { overflow-x: auto; padding-bottom: 4px; }
+    .heatmap-cell { stroke: var(--border); stroke-width: 1; rx: 2; }
+    .heatmap-month-label { font-size: 9.5px; fill: var(--dim); font-family: inherit; }
+    .heatmap-day-label { font-size: 9px; fill: var(--dim-2); font-family: inherit; }
+    .heatmap-legend { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--dim); margin-top: 10px; }
+    .heatmap-legend .swatch { width: 11px; height: 11px; border-radius: 2px; border: 1px solid var(--border); display: inline-block; }
+    .heatmap-total { font-size: 12.5px; color: var(--dim); margin-bottom: 10px; }
+    .heatmap-total strong { color: var(--text); }
+
+    /* Rakip aktivite ("borsa") grafiği */
+    .stock-chart-wrap { position: relative; overflow-x: auto; }
+    .stock-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .stock-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text); }
+    .stock-toggle { background: var(--surface-2, #f8fafc); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+    .stock-toggle:hover { border-color: var(--primary); }
+    .stock-toggle.inactive { color: var(--dim-2); background: transparent; }
+    .stock-legend-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    /* Tooltip HER ZAMAN grafiğin üstünde, ortalanmış, sabit bir noktada
+       gösterilir — fareyi takip ETMEZ. Böylece kenara yakın bir noktaya
+       gelindiğinde kutu konteynerin dışına taşıp yatay/dikey kaydırma
+       çubuklarını (sayfa "sidebar"ları) tetiklemiyor. */
+    .stock-tooltip { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); background: #111827; color: #fff; font-size: 11.5px; line-height: 1.5; padding: 8px 10px; border-radius: 7px; pointer-events: none; white-space: nowrap; box-shadow: 0 6px 16px rgba(0,0,0,.22); z-index: 5; opacity: 0; transition: opacity 0.1s; }
+    .stock-tooltip.show { opacity: 1; }
+    .stock-tooltip .t-date { font-weight: 700; margin-bottom: 3px; text-align: center; }
+    .stock-tooltip .t-row { display: flex; align-items: center; gap: 6px; }
+    .stock-tooltip .t-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+    .empty-note { color: var(--dim); font-size: 13px; text-align: center; padding: 24px 10px; }
+
+    /* Borsa grafiği kaydırıcısı */
+    .stock-slider-wrap { margin-top: 14px; }
+    .stock-slider-wrap input[type="range"] { width: 100%; accent-color: var(--primary); cursor: grab; }
+    .stock-slider-wrap input[type="range"]:active { cursor: grabbing; }
+    .stock-slider-range { text-align: center; font-size: 11.5px; color: var(--dim); margin-top: 4px; }
+
+    /* Sol panel: özet istatistikler + gün filtresi çipi */
+    .stats-summary { background: var(--surface-2, #f8fafc); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 9px; }
+    .stats-headline { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; }
+    .stats-headline b { font-size: 14px; color: var(--text); }
+    .stats-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .stats-group-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--dim-2); margin-right: 2px; }
+    .stats-chip { font-size: 11.5px; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; color: var(--text); }
+    .stats-chip b { color: var(--primary-dark); }
+
+    .day-filter-chip { display: inline-flex; align-items: center; gap: 8px; background: var(--primary-soft); color: var(--primary-dark); border-radius: 20px; padding: 6px 8px 6px 14px; font-size: 12.5px; font-weight: 600; margin-bottom: 14px; }
+    .day-filter-chip button { border: none; background: rgba(255,255,255,.6); color: var(--primary-dark); width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 13px; line-height: 1; }
+    .day-filter-chip button:hover { background: #fff; }
+
+    /* Isı haritası: gün kutuları tıklanabilir */
+    .heatmap-cell { stroke: var(--border); stroke-width: 1; rx: 2; cursor: pointer; }
+    .heatmap-cell:hover { stroke: var(--accent, var(--primary)); stroke-width: 1.4; }
+    .heatmap-cell.selected { stroke: var(--primary); stroke-width: 2; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="logo" href="app.html"><span class="logo-mark">A</span><span>ADMIRA</span></a>
+      <nav class="main-nav">
+        <a class="nav-link" href="app.html">📋 Rakip Analizleri</a>
+        <a class="nav-link active" href="reklam-kutuphanesi.html">🔗 Reklam Kütüphanesi</a>
+        <a class="nav-link" href="butceleme.html">💰 Bütçeleme</a>
+        <a class="nav-link" href="calisma-yontemi.html">📖 Çalışma Yöntemi</a>
+        <a class="nav-link" href="tips.html">💡 Reklam İpuçları</a>
+        <a class="nav-link" href="cevt.html" target="_blank" rel="noopener">📡 CEvT</a>
+      </nav>
+    </div>
+    <div class="user-chip">
+      <div>
+        <div class="user-name" id="userName" style="text-align:right">Misafir</div>
+        <div class="user-meta" id="userEmail">admira</div>
+      </div>
+      <div class="avatar" id="userAvatar">A</div>
+      <button class="btn btn-ghost btn-sm" id="btnLogout">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <div class="ad-container">
+    <!-- SOL TARAF: İncelenen Reklamlar (Eklentiden ve manuel gelenler) -->
+    <div class="ad-card">
+      <h2 style="border-bottom:none; margin-bottom:0; padding-bottom:0;">📂 İncelenen Reklamlar</h2>
+      <p style="color:var(--dim); font-size:12.5px; margin: 4px 0 16px;">Eklentiden gelen reklamlar ve kaydedilen linkler burada listelenir. Kartların üzerine tıklayarak detayları görebilirsiniz.</p>
+      
+      <div class="filter-row">
+        <div class="field">
+          <label>Rakibe Göre Filtrele</label>
+          <select id="filterSelect">
+            <option value="all">Tüm Rakipler</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Aksiyona Göre Filtrele</label>
+          <select id="ctaFilterSelect">
+            <option value="all">Tüm Aksiyonlar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="stats-summary" id="statsSummary"></div>
+      <div id="dayFilterChip"></div>
+
+      <div class="ad-grid" id="adList"></div>
+    </div>
+
+    <!-- SAĞ TARAF: Aktivite Grafikleri ve Rehber -->
+    <div>
+      <!-- Ekleme Aktivitesi Isı Haritası -->
+      <div class="ad-card heatmap-card">
+        <h2>📅 Ekleme Aktivitesi</h2>
+        <div class="heatmap-total" id="heatmapTotal"></div>
+        <div class="heatmap-scroll">
+          <div id="heatmapChart"></div>
+        </div>
+        <div class="heatmap-legend">
+          <span>Az</span>
+          <span class="swatch" style="background:#ffffff;"></span>
+          <span class="swatch" style="background:#fecdd3;"></span>
+          <span class="swatch" style="background:#f97362;"></span>
+          <span class="swatch" style="background:#b91c1c;"></span>
+          <span>Çok</span>
+        </div>
+      </div>
+
+      <!-- Rakip Aktivite Grafiği -->
+      <div class="ad-card">
+        <h2>📈 Rakip Aktivite Grafiği</h2>
+        <p style="color:var(--dim); font-size:12.5px; margin: -8px 0 4px;">Rakiplerin, reklamlarının Meta'da yayına başladığı tarihe göre günde kaç yeni reklam çıkardığı. Görmek istediğiniz rakiplere tıklayın, kaydırıcıyla tarihte gezinin.</p>
+        <div class="stock-legend" id="stockLegend"></div>
+        <div class="stock-chart-wrap" id="stockChartWrap">
+          <div id="stockChart"></div>
+        </div>
+        <div class="stock-slider-wrap" id="stockSliderWrap"></div>
+      </div>
+
+      <!-- Tartışma ve Rehber Paneli -->
+      <div class="discussion-card">
+        <h2>💡 Bu Linklerle Neler Yapabiliriz?</h2>
+        
+        <div class="idea-box">
+          Bu alana kaydettiğiniz URL'leri reklam stratejilerinizi optimize etmek için 3 ana başlıkta veriye dönüştürebiliriz:
+        </div>
+
+        <div class="discussion-section">
+          <h3>1. AI Ajanı Entegrasyonu (Promtlar İle)</h3>
+          <p>Kaydettiğiniz reklam URL'lerini kopyalayarak tarayıcı veya arama yeteneği olan AI ajanıza besleyebilirsiniz:</p>
+          <ul>
+            <li>Ajanınıza: <em>"Bu reklam linkindeki kreatif formatını, sunulan teklifi ve görsel kompozisyonu analiz et, bana JSON formatında bir rapor sun"</em> komutunu verin.</li>
+            <li>Ajanın çıkarttığı analiz metnini kopyalayıp rakibin kartındaki <strong>Reklam Kancaları</strong> veya <strong>Kreatif Tarzları</strong> alanına ekleyebilirsiniz.</li>
+          </ul>
+        </div>
+
+        <div class="discussion-section">
+          <h3>2. Reklam Ömrü (Ad Fatigue) Takibi</h3>
+          <p>Kayıt tarihine göre reklamın ne kadar süre aktif kaldığını ölçebiliriz:</p>
+          <ul>
+            <li>Eğer bir reklam 30+ gündür aktifse, bu bir <strong>"Winner (Kazanan) Kreatif"</strong>'tir. ADMIRA bunu otomatik olarak hesaplar ve Winner etiketi koyar.</li>
+          </ul>
+        </div>
+
+        <div class="discussion-section">
+          <h3>3. Chrome Extension (Eklenti) Entegrasyonu</h3>
+          <p>Chrome eklentimiz sayesinde:</p>
+          <ul>
+            <li>Siz Meta Ad Library'de gezerken tek tıkla reklam metnini, reklam veren sayfasını ve görsel/video kaynağını yakalayıp doğrudan bu panele gönderebilirsiniz.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      function el(sel) { return document.querySelector(sel); }
+      function toast(msg) {
+        var elx = el('#toast');
+        elx.textContent = msg; elx.classList.add('show');
+        clearTimeout(elx._t); elx._t = setTimeout(function () { elx.classList.remove('show'); }, 2600);
+      }
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      // Oturum kontrolü
+      var currentUser = null;
+      fetch('api/auth.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'me' })
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (!res || !res.ok) { location.href = 'index.html'; return; }
+        currentUser = res.user;
+        el('#userName').textContent = res.user.name;
+        el('#userEmail').textContent = res.user.email;
+        el('#userAvatar').textContent = (res.user.name || '?').trim().charAt(0).toUpperCase();
+        initPage();
+      }).catch(function () { location.href = 'index.html'; });
+
+      el('#btnLogout').onclick = function () {
+        fetch('api/auth.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'logout' })
+        }).then(function () { location.href = 'index.html'; }).catch(function () { location.href = 'index.html'; });
+      };
+
+      // Sistem "bugün" referansı — fatigue hesabı ve ısı haritasıyla tutarlı olsun diye tek yerden.
+      var TODAY = new Date(2026, 7, 27);
+
+      function initPage() {
+        var allAdsCache = [];
+        var heatmapSelectedDay = null; // Isı haritasında tıklanan gün (Date) ya da null
+
+        // Bir reklam listesini rakibe göre grupla, azalan sırayla say.
+        // Hem sol paneldeki özet istatistiklerde hem ısı haritası
+        // lejantında (gün seçili/seçili değil) kullanılıyor.
+        function competitorBreakdown(adsSubset) {
+          var counts = {};
+          adsSubset.forEach(function (ad) {
+            var name = ad.competitor || 'Genel';
+            counts[name] = (counts[name] || 0) + 1;
+          });
+          return Object.keys(counts).map(function (name) {
+            return { name: name, count: counts[name] };
+          }).sort(function (a, b) { return b.count - a.count; });
+        }
+
+        // Reklamları sunucudan çek
+        function fetchAds(callback) {
+          fetch('api/extension.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'get_ads' })
+          })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (res && res.ok) { callback(res.ads || []); }
+            else { callback([]); }
+          })
+          .catch(function () { callback([]); });
+        }
+
+        // Rakip filtresini AYRI bir "Rakip Analizleri" listesinden değil,
+        // doğrudan elimizdeki reklamların kendi "competitor" alanından
+        // (yani gerçekten reklamı kaydedilmiş rakiplerden) üretiyoruz —
+        // böylece listede olmayan bir rakip filtre kutusunda görünmez,
+        // listede olan biri de asla eksik kalmaz.
+        function populateCompetitorFilter(ads) {
+          var filter = el('#filterSelect');
+          var current = filter.value || 'all';
+          var names = Array.from(new Set(ads.map(function (ad) { return ad.competitor || 'Genel'; }))).sort(function (a, b) {
+            return a.localeCompare(b, 'tr');
+          });
+
+          filter.innerHTML = '<option value="all">Tüm Rakipler</option>' +
+            names.map(function (name) { return '<option value="' + esc(name) + '">' + esc(name) + '</option>'; }).join('');
+
+          if (names.indexOf(current) > -1 || current === 'all') {
+            filter.value = current;
+          }
+        }
+
+        // Aksiyon (CTA) filtresi — sabit kategori listesi + "Diğer" (eşleşmeyen
+        // ama CTA metni olan) + "Kategorisiz" (CTA metni hiç kaydedilmemiş).
+        function populateCtaFilter() {
+          var filter = el('#ctaFilterSelect');
+          var current = filter.value || 'all';
+          var options = CTA_CATEGORIES.map(function (c) {
+            return '<option value="' + c.key + '">' + esc(c.label) + '</option>';
+          }).join('');
+          filter.innerHTML = '<option value="all">Tüm Aksiyonlar</option>' + options +
+            '<option value="other">🎯 Diğer</option>' +
+            '<option value="none">❔ Kategorisiz</option>';
+          filter.value = current;
+        }
+
+        // Reklamın Aktif / Pasif Durumu (eklentinin yakaladığı gerçek Meta durumu)
+        function getStatusBadge(status) {
+          if (status === 'Aktif') {
+            return '<span class="badge" style="background:var(--success-soft); color:var(--success);">🟢 Aktif</span>';
+          }
+          if (status === 'Pasif') {
+            return '<span class="badge" style="background:#fef2f2; color:#dc2626;">🔴 Pasif</span>';
+          }
+          return '<span class="badge" style="background:#f1f5f9; color:#475569;">⚪ Bilinmiyor</span>';
+        }
+
+        // Reklamın Aksiyon (CTA) Türü — kartta hangi tür reklam olduğunu
+        // ("Alışveriş", "Mesaj", "Uygulama"...) tek bakışta gösterir.
+        //
+        // Meta'nın Marketing API'sinde (Graph API v26.0, call_to_action_type)
+        // 130'dan fazla CTA türü tanımlı — SHOP_NOW, MESSAGE_PAGE, INSTALL_APP,
+        // SIGN_UP, LEARN_MORE, BOOK_NOW, DONATE_NOW, WHATSAPP_MESSAGE,
+        // CONTACT_US, FOLLOW_PAGE, WATCH_VIDEO, EVENT_RSVP, ADD_TO_CART vb.
+        // (kaynak: developers.facebook.com/docs/marketing-api/reference/
+        // ad-creative-link-data-call-to-action). Eklenti bize bu türün kodunu
+        // değil, kullanıcıya görünen buton METNİNİ getiriyor (ör. "Shop now",
+        // "Mesaj gönder"), o yüzden burada anlamına göre birkaç pratik
+        // kategoriye grupluyoruz — dil (TR/EN) farketmeksizin çalışsın diye
+        // anahtar kelime eşleştirmesi kullanıyoruz.
+        var CTA_CATEGORIES = [
+          { key: 'mesaj', label: '💬 Mesaj', match: ['message', 'mesaj', 'whatsapp', 'chat', 'sohbet'] },
+          { key: 'alisveris', label: '🛍 Alışveriş', match: ['shop', 'buy', 'satın al', 'alışveriş', 'sipariş', 'order', 'add to cart', 'sepete', 'view product', 'ticket', 'bilet'] },
+          { key: 'uygulama', label: '📲 Uygulama', match: ['install', 'app', 'yükle', 'i̇ndir', 'indir', 'uygulama'] },
+          { key: 'kayit', label: '📝 Kayıt', match: ['sign up', 'subscribe', 'kaydol', 'abone', 'üye ol', 'kayıt'] },
+          { key: 'randevu', label: '📅 Randevu', match: ['book', 'appointment', 'consultation', 'rezervasyon', 'randevu'] },
+          { key: 'takip', label: '👍 Takip', match: ['follow', 'like page', 'takip et', 'sayfayı beğen', 'instagram profile', 'instagram profili'] },
+          { key: 'iletisim', label: '📞 İletişim', match: ['contact', 'call', 'i̇letişim', 'iletişim', 'ara '] },
+          { key: 'bagis', label: '❤ Bağış', match: ['donate', 'bağış'] },
+          { key: 'etkinlik', label: '🎟 Etkinlik', match: ['rsvp', 'event', 'etkinlik'] },
+          { key: 'icerik', label: '▶ İçerik', match: ['watch', 'listen', 'izle', 'dinle'] },
+          { key: 'bilgi', label: '🔗 Bilgi', match: ['learn more', 'get quote', 'get details', 'find out', 'daha fazla bilgi', 'detay', 'teklif al', 'get offer'] }
+        ];
+
+        // ad.ctaText, eklentinin CTA butonundan doğrudan okuduğu kesin
+        // metindir. Kaydedilmemişse ('Kategorisiz') ya da bilinen hiçbir
+        // kategoriyle eşleşmiyorsa ('Diğer') tahmin YÜRÜTMÜYORUZ — sadece
+        // gerçekten yakalanmış veriyi gösteriyoruz.
+        function classifyAdCta(ad) {
+          if (!ad.ctaText) return { key: 'none', label: '❔ Kategorisiz' };
+          var clean = ad.ctaText.toLowerCase().trim();
+          var found = CTA_CATEGORIES.find(function (c) {
+            return c.match.some(function (keyword) { return clean.indexOf(keyword) > -1; });
+          });
+          return found || { key: 'other', label: '🎯 ' + ad.ctaText };
+        }
+
+        function getCtaBadge(ad) {
+          var cat = classifyAdCta(ad);
+          if (cat.key === 'none') return '';
+          return '<span class="ad-cta-badge" title="' + esc(ad.ctaText) + '">' + esc(cat.label) + '</span>';
+        }
+
+        // Reklamın "Başlangıç" metnini gerçek bir Date nesnesine çevirir.
+        // Ayrıştırılamazsa null döner. Hem fatigue rozetinde hem de listeyi
+        // tarihe göre sıralarken kullanılır.
+        function parseAdStartDate(startDateStr) {
+          if (!startDateStr || startDateStr === 'Bilinmiyor' || startDateStr === 'Tespit edilemedi' || startDateStr === 'Bilinmeyen') {
+            return null;
+          }
+
+          var clean = startDateStr.toLowerCase().trim();
+          var day = null;
+          var monthIndex = null;
+          var year = new Date().getFullYear();
+
+          var ymd = clean.match(/^(\d{4})-(\d{2})-(\d{2})/);
+          if (ymd) {
+            year = parseInt(ymd[1]);
+            monthIndex = parseInt(ymd[2]) - 1;
+            day = parseInt(ymd[3]);
+          } else {
+            var monthMap = {
+              'ocak': 0, 'şubat': 1, 'mart': 2, 'nisan': 3, 'mayıs': 4, 'haziran': 5,
+              'temmuz': 6, 'ağustos': 7, 'eylül': 8, 'ekim': 9, 'kasım': 10, 'aralık': 11,
+              'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
+              'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11,
+              // Not: 'mar' (Mart) ve 'may' (Mayıs) İngilizce blokta zaten var (aynı ay indeksiyle).
+              'oca': 0, 'şub': 1, 'nis': 3, 'haz': 5,
+              'tem': 6, 'ağu': 7, 'eyl': 8, 'eki': 9, 'kas': 10, 'ara': 11
+            };
+
+            var dayMatch = clean.match(/\d+/);
+            if (dayMatch) { day = parseInt(dayMatch[0]); }
+
+            var yearMatch = clean.match(/\b\d{4}\b/);
+            if (yearMatch) { year = parseInt(yearMatch[0]); }
+
+            for (var key in monthMap) {
+              if (clean.indexOf(key) > -1) {
+                monthIndex = monthMap[key];
+                break;
+              }
+            }
+          }
+
+          if (day === null || monthIndex === null) {
+            return null;
+          }
+
+          var start = new Date(year, monthIndex, day);
+          return isNaN(start.getTime()) ? null : start;
+        }
+
+        // Reklam Fatigue (Yayın Süresi) Hesaplayıcı
+        function getFatigueBadge(startDateStr) {
+          var start = parseAdStartDate(startDateStr);
+          if (!start) {
+            return '<span class="badge" style="background:#f1f5f9; color:#475569; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">Fatigue: Bilinmiyor</span>';
+          }
+
+          var diffTime = TODAY - start;
+          var diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+          if (diffDays < 0) diffDays = 0;
+
+          if (diffDays >= 30) {
+            return '<span class="badge" style="background:var(--success-soft); color:var(--success); padding:3px 8px; border-radius:4px; font-size:11px; font-weight:800; border:1px solid #bbf7d0;">Winner 🏆 (' + diffDays + ' Gün)</span>';
+          } else {
+            return '<span class="badge" style="background:var(--warn-soft); color:var(--warn); padding:3px 8px; border-radius:4px; font-size:11px; font-weight:800; border:1px solid #fde3b0;">Testing 🧪 (' + diffDays + ' Gün)</span>';
+          }
+        }
+
+        // Reklam Listesini Render Et
+        function renderAdsList(ads) {
+            var filterVal = el('#filterSelect').value;
+            var ctaFilterVal = el('#ctaFilterSelect').value;
+            var listWrap = el('#adList');
+
+            var filtered = ads;
+            if (filterVal !== 'all') {
+              filtered = filtered.filter(function (ad) { return (ad.competitor || 'Genel') === filterVal; });
+            }
+            if (ctaFilterVal !== 'all') {
+              filtered = filtered.filter(function (ad) { return classifyAdCta(ad).key === ctaFilterVal; });
+            }
+            if (heatmapSelectedDay) {
+              var selectedKey = dayKey(heatmapSelectedDay);
+              filtered = filtered.filter(function (ad) {
+                var d = parseAdStartDate(ad.startDate);
+                return d && dayKey(d) === selectedKey;
+              });
+            }
+
+            // Gün filtresi çipi (ısı haritasından bir kutuya tıklanmışsa görünür).
+            var chipEl = el('#dayFilterChip');
+            if (heatmapSelectedDay) {
+              var chipLabel = heatmapSelectedDay.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+              chipEl.innerHTML = '<span class="day-filter-chip">📅 ' + esc(chipLabel) + ' filtreleniyor <button type="button" id="clearDayFilter">✕</button></span>';
+              el('#clearDayFilter').onclick = function () {
+                heatmapSelectedDay = null;
+                renderHeatmap(allAdsCache);
+                renderAdsList(allAdsCache);
+              };
+            } else {
+              chipEl.innerHTML = '';
+            }
+
+            // Özet istatistikler: şu an görünen (filtrelenmiş) reklamlara göre
+            // rakip / aksiyon / winner-testing dağılımı.
+            var statsEl = el('#statsSummary');
+            var winnerCount = 0, testingCount = 0, unknownFatigue = 0;
+            filtered.forEach(function (ad) {
+              var d = parseAdStartDate(ad.startDate);
+              if (!d) { unknownFatigue++; return; }
+              var days = Math.floor((TODAY - d) / (1000 * 60 * 60 * 24));
+              if (days >= 30) winnerCount++; else testingCount++;
+            });
+            var ctaCounts = {};
+            filtered.forEach(function (ad) {
+              var cat = classifyAdCta(ad);
+              if (cat.key === 'none') return;
+              var label = cat.key === 'other' ? '🎯 Diğer' : cat.label;
+              ctaCounts[label] = (ctaCounts[label] || 0) + 1;
+            });
+            var ctaBreakdown = Object.keys(ctaCounts).map(function (label) {
+              return { label: label, count: ctaCounts[label] };
+            }).sort(function (a, b) { return b.count - a.count; });
+            var compBreakdown = competitorBreakdown(filtered);
+
+            statsEl.innerHTML =
+              '<div class="stats-headline">' +
+                '<span>Toplam <b>' + filtered.length + '</b></span>' +
+                '<span>Winner 🏆 <b>' + winnerCount + '</b></span>' +
+                '<span>Testing 🧪 <b>' + testingCount + '</b></span>' +
+                (unknownFatigue ? '<span>Tarihsiz <b>' + unknownFatigue + '</b></span>' : '') +
+              '</div>' +
+              (compBreakdown.length ? '<div class="stats-group"><span class="stats-group-label">Rakiplere göre</span>' +
+                compBreakdown.map(function (c) { return '<span class="stats-chip">' + esc(c.name) + ' <b>' + c.count + '</b></span>'; }).join('') +
+              '</div>' : '') +
+              (ctaBreakdown.length ? '<div class="stats-group"><span class="stats-group-label">Aksiyona göre</span>' +
+                ctaBreakdown.map(function (c) { return '<span class="stats-chip">' + esc(c.label) + ' <b>' + c.count + '</b></span>'; }).join('') +
+              '</div>' : '');
+
+            // Reklamın yayına başladığı tarihe göre, en eskiden en yeniye sırala.
+            // Tarihi tespit edilemeyen reklamlar (ör. eski/eksik kayıtlar) en sona atılır.
+            filtered = filtered.slice().sort(function (a, b) {
+              var dateA = parseAdStartDate(a.startDate);
+              var dateB = parseAdStartDate(b.startDate);
+              if (!dateA && !dateB) return 0;
+              if (!dateA) return 1;
+              if (!dateB) return -1;
+              return dateA - dateB;
+            });
+
+            if (!filtered.length) {
+              listWrap.innerHTML = '<div style="color:var(--dim); font-size:13.5px; text-align:center; padding:20px; background:#fff; border-radius:8px; border:1px dashed var(--border);">Henüz kaydedilmiş reklam linki bulunmuyor.</div>';
+              return;
+            }
+
+            listWrap.innerHTML = filtered.map(function (ad) {
+              var dateStr = new Date(ad.createdAt).toLocaleDateString('tr-TR');
+              var compName = ad.competitor || 'Genel';
+              
+              // Kartın üstünde gösterilecek kimlik: eklentinin yakaladığı gerçek
+              // Meta "Library ID" varsa onu göster (Meta'da geri aranabilir),
+              // yoksa (manuel eklenen eski kayıtlar) dahili ID'den kısa bir kod türet.
+              var displayId = ad.libraryId;
+              if (!displayId && ad.id) {
+                var parts = ad.id.split('_');
+                displayId = parts[2] || parts[1] || ad.id.substring(3, 9);
+              }
+              displayId = displayId || 'Bilinmiyor';
+
+              var statusBadge = getStatusBadge(ad.activeStatus);
+              var ctaBadge = getCtaBadge(ad);
+              var fatigueBadge = getFatigueBadge(ad.startDate);
+
+              // Medya türü eklenti tarafından biliniyorsa (mediaType) doğrudan onu
+              // kullan; eski kayıtlarda bu alan yoksa URL'den tahmin et.
+              var mediaHTML = '';
+              if (ad.mediaUrl) {
+                var isVideo = ad.mediaType === 'video' || (!ad.mediaType && (ad.mediaUrl.indexOf('.mp4') > -1 || ad.mediaUrl.indexOf('video') > -1));
+                if (isVideo) {
+                  mediaHTML = '<div class="ad-media-box"><video src="' + esc(ad.mediaUrl) + '" controls onerror="this.parentNode.style.display=\'none\'"></video></div>';
+                } else {
+                  mediaHTML = '<div class="ad-media-box"><img src="' + esc(ad.mediaUrl) + '" onerror="this.parentNode.style.display=\'none\'"></div>';
+                }
+              }
+
+              var notesText = ad.notes ? '<div class="ad-copy-box">' + esc(ad.notes) + '</div>' : '<div class="ad-copy-box" style="color:var(--dim); font-style:italic;">Açıklama veya reklam metni bulunamadı.</div>';
+
+              // ID rozeti artık aynı zamanda orijinal Meta Ad Library linkine
+              // gider — ayrı bir "Orijinal URL" satırına gerek kalmadı.
+              var idBadgeHTML = '<a class="ad-id-badge" href="' + esc(ad.url) + '" target="_blank" title="Meta Ad Library\'de aç">#' + esc(displayId) + ' ↗</a>';
+
+              // Hedef Site + Aksiyon: Meta'nın reklamın ALTINDA gösterdiği aynı
+              // blok — "Mesaj gönder → WWW.INSTAGRAM.COM" ya da
+              // "Şimdi Alışveriş Yap → WEBSITE.COM" gibi. Kartın altında,
+              // footer'ın hemen üstünde gösterilir.
+              var ctaHTML = '';
+              if (ad.ctaText || ad.destinationLabel) {
+                var ctaLabel = ad.ctaText ? esc(ad.ctaText) : 'Git';
+                var destLabel = ad.destinationLabel ? esc(ad.destinationLabel) : esc(ad.landingUrl || '');
+                var destInner = ad.landingUrl
+                  ? '<a href="' + esc(ad.landingUrl) + '" target="_blank" style="color:var(--primary); text-decoration:underline;">' + destLabel + '</a>'
+                  : destLabel;
+                ctaHTML = '<div style="font-size:12.5px; color:var(--text); background:#fff; border:1px solid #e2e8f0; padding:8px 12px; border-radius:6px; margin-top:12px;">' +
+                  '📣 <strong>' + ctaLabel + '</strong> → ' + destInner +
+                '</div>';
+              }
+
+              return (
+                '<div class="ad-card-item" data-id="' + ad.id + '">' +
+                  '<div class="ad-header">' +
+                    '<div class="ad-title-group">' +
+                      statusBadge +
+                      '<span class="ad-competitor-name">' + esc(compName) + '</span>' +
+                      idBadgeHTML +
+                      '<span class="ad-date-badge">Başlangıç: ' + esc(ad.startDate || 'Bilinmiyor') + '</span>' +
+                    '</div>' +
+                    '<div class="ad-meta-badges">' +
+                      ctaBadge +
+                      fatigueBadge +
+                      '<span class="ad-chevron">▼</span>' +
+                    '</div>' +
+                  '</div>' +
+                  '<div class="ad-content">' +
+                    notesText +
+                    mediaHTML +
+                    ctaHTML +
+                    '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top:1px solid var(--border); padding-top:12px; font-size:11.5px; color:var(--dim);">' +
+                      '<span>Sisteme Kayıt: ' + dateStr + '</span>' +
+                      '<div style="display:flex; gap:6px;">' +
+                        '<button class="btn btn-ghost btn-sm" data-action="copy-url" style="padding: 4px 8px; font-size:11px;">📋 Linki Kopyala</button>' +
+                        '<button class="btn btn-danger-ghost btn-sm" data-action="delete" style="padding: 4px 8px; font-size:11px;">🗑 Sil</button>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>'
+              );
+            }).join('');
+
+            // Akordiyon olayını bağla
+            listWrap.querySelectorAll('.ad-header').forEach(function (header) {
+              header.onclick = function (e) {
+                if (e.target.closest('button') || e.target.closest('a')) {
+                  return;
+                }
+                var item = header.closest('.ad-card-item');
+                item.classList.toggle('active');
+              };
+            });
+
+            // Buton Olayları
+            listWrap.querySelectorAll('[data-action]').forEach(function (btn) {
+              btn.onclick = function (e) {
+                e.stopPropagation();
+                var item = btn.closest('.ad-card-item');
+                var id = item.getAttribute('data-id');
+                var action = btn.getAttribute('data-action');
+
+                if (action === 'delete') {
+                  if (confirm('Bu reklam linkini silmek istediğinize emin misiniz?')) {
+                    fetch('api/extension.php', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ action: 'delete_ad', id: id })
+                    })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                      if (res && res.ok) {
+                        refreshAll();
+                        toast('Reklam linki silindi.');
+                      } else {
+                        toast('Silme hatası: ' + res.error);
+                      }
+                    })
+                    .catch(function () { toast('Bağlantı hatası.'); });
+                  }
+                } else if (action === 'copy-url') {
+                  var foundAd = allAdsCache.find(function (x) { return x.id === id; });
+                  if (foundAd) {
+                    navigator.clipboard.writeText(foundAd.url).then(function () {
+                      toast('Reklam linki panoya kopyalandı!');
+                    }).catch(function () {
+                      toast('Kopyalama başarısız.');
+                    });
+                  }
+                }
+              };
+            });
+        }
+
+        // ------------------------------------------------------------
+        // Ekleme Aktivitesi Isı Haritası (GitHub katkı grafiği tarzı)
+        // ------------------------------------------------------------
+        // "Eklenme" burada ADMIRA'ya kayıt tarihi (createdAt) DEĞİL,
+        // reklamın Meta'da YAYINA BAŞLADIĞI tarih (startDate) anlamına
+        // geliyor. Kart en az 90 gün (13 hafta) gösterir; kartın gerçek
+        // genişliğine göre bunun ötesine (daha eski aylara) da uzayarak
+        // boşta kalan alanı doldurur. Renk skalası: 0 reklam = beyaz,
+        // arttıkça pembeden kırmızıya koyulaşır.
+        function dayKey(d) {
+          return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        function lerpColor(hexA, hexB, t) {
+          var a = [parseInt(hexA.slice(1, 3), 16), parseInt(hexA.slice(3, 5), 16), parseInt(hexA.slice(5, 7), 16)];
+          var b = [parseInt(hexB.slice(1, 3), 16), parseInt(hexB.slice(3, 5), 16), parseInt(hexB.slice(5, 7), 16)];
+          var c = a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); });
+          return 'rgb(' + c.join(',') + ')';
+        }
+
+        var MONTH_LABELS_TR = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+        var WEEKDAY_LABELS_TR = ['Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct', 'Pz'];
+
+        function renderHeatmap(ads) {
+          // SABİT genişlik/sütun sayısı — kap konteynerin genişliğini ÖLÇÜP
+          // ona göre büyümeye çalışmıyoruz. (Önceki sürüm el('#heatmapChart')
+          // .clientWidth ölçüyordu; bu değer CSS Grid içinde her çizimde
+          // biraz daha büyük geri geliyor, çünkü grid öğesinin min-width:auto
+          // varsayılanı SVG'nin içerik genişliğine göre büyüyebiliyor — her
+          // tıklamada yeniden ölçüp yeniden çizmek bu döngüyü besleyip kartın
+          // sürekli büyümesine yol açıyordu. Sabit sütun sayısı bu döngüyü
+          // tamamen ortadan kaldırır.)
+          var COLS = 53; // 53 hafta = 371 gün — son 365 günü tam haftalar halinde kapsar
+
+          var adsByDay = {};
+          ads.forEach(function (ad) {
+            var d = parseAdStartDate(ad.startDate);
+            if (!d) return;
+            var key = dayKey(d);
+            (adsByDay[key] = adsByDay[key] || []).push(ad);
+          });
+          var counts = {};
+          Object.keys(adsByDay).forEach(function (k) { counts[k] = adsByDay[k].length; });
+
+          var cell = 11, gap = 3, step = cell + gap;
+          var leftPad = 20, topPad = 14;
+          var cols = COLS;
+
+          var end = new Date(TODAY);
+          var start = new Date(end);
+          start.setDate(start.getDate() - (cols * 7 - 1));
+          // Tam haftalar halinde göster: başlangıcı o haftanın Pazartesi'sine çek.
+          var startDow = (start.getDay() + 6) % 7; // 0 = Pazartesi
+          start.setDate(start.getDate() - startDow);
+          var endDow = (end.getDay() + 6) % 7;
+          var alignedEnd = new Date(end);
+          alignedEnd.setDate(alignedEnd.getDate() + (6 - endDow));
+
+          var days = [];
+          var windowAdsList = [];
+          var cur = new Date(start);
+          while (cur <= alignedEnd) {
+            days.push(new Date(cur));
+            if (cur <= end) windowAdsList = windowAdsList.concat(adsByDay[dayKey(cur)] || []);
+            cur = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate() + 1);
+          }
+
+          var maxCount = 0;
+          days.forEach(function (d) { maxCount = Math.max(maxCount, counts[dayKey(d)] || 0); });
+
+          cols = Math.ceil(days.length / 7);
+          var width = leftPad + cols * step;
+          var height = topPad + 7 * step;
+
+          var cellsSvg = '';
+          var lastMonth = -1;
+          var lastLabelCol = -99;
+          for (var col = 0; col < cols; col++) {
+            var topDay = days[col * 7];
+            // Bitişik iki sütun ayrı aya denk gelirse etiketler üst üste
+            // biner (3 harfli etiket ~14px sütun genişliğinden geniş) —
+            // bir önceki etiketten en az 2 sütun uzakta değilse atla.
+            if (topDay.getMonth() !== lastMonth && col - lastLabelCol >= 2) {
+              cellsSvg += '<text class="heatmap-month-label" x="' + (leftPad + col * step) + '" y="' + (topPad - 4) + '">' + MONTH_LABELS_TR[topDay.getMonth()] + '</text>';
+              lastLabelCol = col;
+            }
+            lastMonth = topDay.getMonth();
+            for (var row = 0; row < 7; row++) {
+              var d = days[col * 7 + row];
+              if (!d) continue;
+              var dKey = dayKey(d);
+              var count = counts[dKey] || 0;
+              var fill = count === 0 ? '#ffffff' : lerpColor('#fecdd3', '#b91c1c', maxCount > 0 ? count / maxCount : 0);
+              var label = d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) + ': ' + count + ' reklam yayına başladı';
+              var isSelected = heatmapSelectedDay && dayKey(heatmapSelectedDay) === dKey;
+              cellsSvg += '<rect class="heatmap-cell' + (isSelected ? ' selected' : '') + '" data-key="' + dKey + '" x="' + (leftPad + col * step) + '" y="' + (topPad + row * step) + '" width="' + cell + '" height="' + cell + '" fill="' + fill + '"><title>' + esc(label) + '</title></rect>';
+            }
+          }
+          for (var r = 0; r < 7; r += 2) {
+            cellsSvg += '<text class="heatmap-day-label" x="0" y="' + (topPad + r * step + cell) + '">' + WEEKDAY_LABELS_TR[r] + '</text>';
+          }
+
+          el('#heatmapChart').innerHTML = '<svg width="' + width + '" height="' + height + '" viewBox="0 0 ' + width + ' ' + height + '">' + cellsSvg + '</svg>';
+
+          // Bir güne tıklayınca: o günü seç/kaldır, sol listeyi filtrele.
+          // Boş alana (kutu olmayan bir yere) tıklayınca sıfırlanır.
+          var heatmapSvg = el('#heatmapChart').querySelector('svg');
+          heatmapSvg.querySelectorAll('.heatmap-cell').forEach(function (rect) {
+            rect.addEventListener('click', function (e) {
+              e.stopPropagation();
+              var key = rect.getAttribute('data-key');
+              var clickedDate = days.find(function (d) { return dayKey(d) === key; });
+              if (heatmapSelectedDay && dayKey(heatmapSelectedDay) === key) {
+                heatmapSelectedDay = null;
+              } else {
+                heatmapSelectedDay = clickedDate;
+              }
+              renderHeatmap(allAdsCache);
+              renderAdsList(allAdsCache);
+            });
+          });
+          heatmapSvg.addEventListener('click', function () {
+            if (!heatmapSelectedDay) return;
+            heatmapSelectedDay = null;
+            renderHeatmap(allAdsCache);
+            renderAdsList(allAdsCache);
+          });
+
+          // Lejant metni: bir gün seçiliyse o günün rakip dağılımı, değilse
+          // görünen tüm dönemin rakip dağılımı.
+          var rangeLabel = start.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) + ' – bugün';
+          if (heatmapSelectedDay) {
+            var dayLabel = heatmapSelectedDay.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+            var dayAds = adsByDay[dayKey(heatmapSelectedDay)] || [];
+            var dayBreakdown = competitorBreakdown(dayAds);
+            el('#heatmapTotal').innerHTML = '<strong>' + esc(dayLabel) + '</strong> — ' + dayAds.length + ' reklam' +
+              (dayBreakdown.length ? ': ' + dayBreakdown.map(function (c) { return esc(c.name) + ' <strong>' + c.count + '</strong>'; }).join(' &nbsp;•&nbsp; ') : '');
+          } else {
+            var windowBreakdown = competitorBreakdown(windowAdsList);
+            el('#heatmapTotal').innerHTML = rangeLabel + ' arasında <strong>' + windowAdsList.length + '</strong> reklam yayına başlamış' +
+              (windowBreakdown.length ? ': ' + windowBreakdown.map(function (c) { return esc(c.name) + ' <strong>' + c.count + '</strong>'; }).join(' &nbsp;•&nbsp; ') : '.');
+          }
+        }
+
+        // ------------------------------------------------------------
+        // Rakip Aktivite Grafiği ("Borsa" tarzı, GÜNLÜK, kaydırılabilir)
+        // ------------------------------------------------------------
+        // Kümülatif değil — her nokta, o GÜN başlangıç tarihi olan reklam
+        // SAYISIDIR. Çizgi yok: sadece verinin OLDUĞU günlerde (korelasyon
+        // noktaları gibi) bir daire — büyüklüğü o günkü sayıyı yansıtır.
+        // Grafik 90 günlük SABİT boyutlu bir pencere gösterir; altındaki
+        // kaydırıcıyla bu pencere tüm zamanlar boyunca gezdirilir (kaydırıcı
+        // sürüklenirken yeniden oluşturulmaz, sadece draw() çağrılır).
+        // Bilgi kartı (tooltip) fareyi TAKİP ETMEZ — her zaman grafiğin
+        // üstünde ortalanmış sabit bir noktada belirir; bu sayede kenara
+        // yakın noktalara gelindiğinde konteyner dışına taşıp yatay/dikey
+        // kaydırma çubuklarını tetiklemez. Rakip seçimi ve renk ataması
+        // önceki davranışla aynı: kalıcı ve rakibe sabit.
+        var STOCK_PALETTE = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300', '#4a3aa7', '#e34948'];
+        var stockDeselected = new Set(); // isimleri kapatılmış (gizlenmiş) rakipler
+        var stockWindowStartOffset = null; // minDate'ten itibaren, görünen 90 günlük pencerenin başlangıç ofseti
+        var STOCK_WINDOW_DAYS = 90;
+        var STOCK_W = 720, STOCK_H = 300; // sabit — asla ölçülmez/büyümez
+
+        function renderStockChart(ads) {
+          var withStart = ads.map(function (ad) {
+            return { ad: ad, date: parseAdStartDate(ad.startDate) };
+          }).filter(function (x) { return x.date; });
+
+          var chartEl = el('#stockChart');
+          var legendEl = el('#stockLegend');
+          var sliderWrapEl = el('#stockSliderWrap');
+
+          if (!withStart.length) {
+            chartEl.innerHTML = '<div class="empty-note">Başlangıç tarihi bilinen reklam yok.</div>';
+            legendEl.innerHTML = '';
+            sliderWrapEl.innerHTML = '';
+            return;
+          }
+
+          var byCompetitor = {};
+          withStart.forEach(function (x) {
+            var name = x.ad.competitor || 'Genel';
+            (byCompetitor[name] = byCompetitor[name] || []).push(x.date);
+          });
+
+          var allSeries = Object.keys(byCompetitor).map(function (name) {
+            var dates = byCompetitor[name].slice().sort(function (a, b) { return a - b; });
+            var countsByDay = {};
+            dates.forEach(function (d) { var k = dayKey(d); countsByDay[k] = (countsByDay[k] || 0) + 1; });
+            return { name: name, total: dates.length, countsByDay: countsByDay };
+          }).sort(function (a, b) { return b.total - a.total; });
+
+          allSeries.forEach(function (s, i) { s.color = STOCK_PALETTE[i % STOCK_PALETTE.length]; });
+
+          // Y ekseni tavanı TÜM ZAMANLARIN günlük maksimumuna göre BİR KEZ
+          // sabitlenir (tüm rakipler dahil, seçim durumundan bağımsız) —
+          // kaydırıcı farklı bir 90 günlük döneme kaydığında ya da bir rakip
+          // açılıp kapatıldığında yeniden HESAPLANMAZ. Böylece dikey ölçek
+          // her zaman aynı kalır, sadece o dönemde/rakipte veri olmayan
+          // kısımlar boş görünür.
+          var globalMaxY = 1;
+          allSeries.forEach(function (s) {
+            Object.keys(s.countsByDay).forEach(function (k) {
+              globalMaxY = Math.max(globalMaxY, s.countsByDay[k]);
+            });
+          });
+          globalMaxY += 5; // en yüksek noktanın üstünde biraz boşluk (nefes payı)
+
+          var allDates = withStart.map(function (x) { return x.date; });
+          var minDate = new Date(Math.min.apply(null, allDates));
+          minDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
+          var maxDate = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
+
+          var totalSpanDays = Math.round((maxDate - minDate) / 86400000) + 1;
+          var maxStartOffset = Math.max(0, totalSpanDays - STOCK_WINDOW_DAYS);
+          if (stockWindowStartOffset === null) stockWindowStartOffset = maxStartOffset; // varsayılan: en güncel 90 gün
+          stockWindowStartOffset = Math.min(stockWindowStartOffset, maxStartOffset);
+
+          // Kaydırıcıyı BİR KEZ kur (draw() her tetiklendiğinde yeniden
+          // oluşturmuyoruz — aksi halde sürükleme jesti kesintiye uğrar).
+          sliderWrapEl.innerHTML =
+            '<input type="range" id="stockSlider" min="0" max="' + maxStartOffset + '" value="' + stockWindowStartOffset + '"' + (maxStartOffset === 0 ? ' disabled' : '') + '>' +
+            '<div class="stock-slider-range" id="stockSliderRange"></div>';
+          var sliderInput = el('#stockSlider');
+          sliderInput.addEventListener('input', function () {
+            stockWindowStartOffset = parseInt(sliderInput.value, 10);
+            draw();
+          });
+
+          function windowStart() {
+            var d = new Date(minDate);
+            d.setDate(d.getDate() + stockWindowStartOffset);
+            return d;
+          }
+          function windowEnd() {
+            var d = new Date(windowStart());
+            d.setDate(d.getDate() + STOCK_WINDOW_DAYS - 1);
+            return d > maxDate ? maxDate : d;
+          }
+
+          function draw() {
+            var selected = allSeries.filter(function (s) { return !stockDeselected.has(s.name); });
+
+            legendEl.innerHTML = allSeries.map(function (s) {
+              var isOn = !stockDeselected.has(s.name);
+              return '<button type="button" class="stock-legend-item stock-toggle' + (isOn ? '' : ' inactive') + '" data-name="' + esc(s.name) + '">' +
+                '<span class="stock-legend-dot" style="background:' + (isOn ? s.color : '#c3c2b7') + '"></span>' + esc(s.name) + ' (' + s.total + ')' +
+              '</button>';
+            }).join('');
+
+            legendEl.querySelectorAll('.stock-toggle').forEach(function (btn) {
+              btn.onclick = function () {
+                var name = btn.getAttribute('data-name');
+                if (stockDeselected.has(name)) stockDeselected.delete(name); else stockDeselected.add(name);
+                draw();
+              };
+            });
+
+            var wStart = windowStart(), wEnd = windowEnd();
+            el('#stockSliderRange').textContent = wStart.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) +
+              ' – ' + wEnd.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            if (!selected.length) {
+              chartEl.innerHTML = '<div class="empty-note">Görüntülemek için en az bir rakip seçin.</div>';
+              return;
+            }
+
+            var xSpan = Math.max(1, wEnd - wStart);
+            var maxY = globalMaxY; // sabit — pencere/seçim değişse de aynı kalır
+
+            var W = STOCK_W, H = STOCK_H, padL = 30, padR = 12, padT = 16, padB = 26;
+            var plotW = W - padL - padR, plotH = H - padT - padB;
+
+            function xPix(d) { return padL + ((d - wStart) / xSpan) * plotW; }
+            function yPix(v) { return padT + plotH - (v / maxY) * plotH; }
+            function dotRadius(count) { return Math.min(11, 3 + Math.sqrt(count) * 2.2); }
+
+            var gridSvg = '';
+            var yTicks = Math.min(maxY, 4);
+            for (var i = 0; i <= yTicks; i++) {
+              var val = Math.round((maxY / yTicks) * i);
+              var y = yPix(val);
+              gridSvg += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="var(--border)" stroke-width="1"></line>';
+              gridSvg += '<text x="' + (padL - 6) + '" y="' + (y + 3) + '" text-anchor="end" font-size="10" fill="var(--dim-2)">' + val + '</text>';
+            }
+
+            var xLabels = '';
+            var labelCursor = new Date(wStart.getFullYear(), wStart.getMonth(), 1);
+            if (labelCursor < wStart) labelCursor = new Date(labelCursor.getFullYear(), labelCursor.getMonth() + 1, 1);
+            while (labelCursor <= wEnd) {
+              var lx = xPix(labelCursor);
+              xLabels += '<text x="' + lx + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10" fill="var(--dim-2)">' + MONTH_LABELS_TR[labelCursor.getMonth()] + ' \'' + String(labelCursor.getFullYear()).slice(2) + '</text>';
+              labelCursor = new Date(labelCursor.getFullYear(), labelCursor.getMonth() + 1, 1);
+            }
+
+            // Çizgi yok — sadece verinin olduğu (ve pencere içindeki) günlerde
+            // bir daire. Daire büyüklüğü o günkü reklam sayısını yansıtır.
+            var dotsSvg = selected.map(function (s) {
+              return Object.keys(s.countsByDay).map(function (k) {
+                var parts = k.split('-');
+                var d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+                if (d < wStart || d > wEnd) return '';
+                var count = s.countsByDay[k];
+                return '<circle cx="' + xPix(d).toFixed(1) + '" cy="' + yPix(count).toFixed(1) + '" r="' + dotRadius(count).toFixed(1) + '" fill="' + s.color + '" fill-opacity="0.78" stroke="' + s.color + '" stroke-width="1"><title>' +
+                  esc(s.name) + ' — ' + d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) + ': ' + count + '</title></circle>';
+              }).join('');
+            }).join('');
+
+            chartEl.innerHTML =
+              '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" id="stockSvg">' +
+                gridSvg + xLabels + dotsSvg +
+                '<rect id="stockHoverCatcher" x="' + padL + '" y="' + padT + '" width="' + plotW + '" height="' + plotH + '" fill="transparent"></rect>' +
+                '<line id="stockCrosshair" x1="0" y1="' + padT + '" x2="0" y2="' + (H - padB) + '" stroke="var(--dim)" stroke-width="1" stroke-dasharray="3,3" style="display:none;"></line>' +
+              '</svg>' +
+              '<div class="stock-tooltip" id="stockTooltip"></div>';
+
+            var svg = el('#stockSvg');
+            var catcher = el('#stockHoverCatcher');
+            var crosshair = el('#stockCrosshair');
+            var tooltip = el('#stockTooltip');
+
+            // Bilgi kartı sabit/ortalanmış (CSS ile) — burada sadece
+            // İÇERİĞİNİ güncelliyoruz, konumunu (left/top) DEĞİŞTİRMİYORUZ.
+            catcher.addEventListener('mousemove', function (e) {
+              var rect = svg.getBoundingClientRect();
+              var scaleX = W / rect.width;
+              var mouseX = (e.clientX - rect.left) * scaleX;
+              var hoveredDate = new Date(wStart.getTime() + ((mouseX - padL) / plotW) * xSpan);
+              var hoveredKey = dayKey(hoveredDate);
+
+              crosshair.setAttribute('x1', mouseX);
+              crosshair.setAttribute('x2', mouseX);
+              crosshair.style.display = 'block';
+
+              var rows = selected.map(function (s) {
+                return { name: s.name, color: s.color, value: s.countsByDay[hoveredKey] || 0 };
+              }).filter(function (r) { return r.value > 0; }).sort(function (a, b) { return b.value - a.value; });
+
+              var dateLabel = hoveredDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+              if (!rows.length) {
+                tooltip.innerHTML = '<div class="t-date">' + esc(dateLabel) + '</div><div class="t-row" style="color:#9ca3af;">Reklam yok</div>';
+                tooltip.classList.add('show');
+                return;
+              }
+              tooltip.innerHTML = '<div class="t-date">' + esc(dateLabel) + '</div>' + rows.map(function (r) {
+                return '<div class="t-row"><span class="t-dot" style="background:' + r.color + '"></span>' + esc(r.name) + ': ' + r.value + '</div>';
+              }).join('');
+              tooltip.classList.add('show');
+            });
+
+            catcher.addEventListener('mouseleave', function () {
+              crosshair.style.display = 'none';
+              tooltip.classList.remove('show');
+            });
+          }
+
+          draw();
+        }
+
+        // Tüm veriyi yeniden çekip listeyi + iki grafiği + filtreleri günceller.
+        function refreshAll() {
+          fetchAds(function (ads) {
+            allAdsCache = ads;
+            populateCompetitorFilter(ads);
+            populateCtaFilter();
+            renderAdsList(ads);
+            renderHeatmap(ads);
+            renderStockChart(ads);
+          });
+        }
+
+        el('#filterSelect').onchange = function () { renderAdsList(allAdsCache); };
+        el('#ctaFilterSelect').onchange = function () { renderAdsList(allAdsCache); };
+
+        refreshAll();
+      }
+    })();
+  </script>
+</body>
+</html>

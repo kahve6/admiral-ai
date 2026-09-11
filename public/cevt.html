@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CEvT — Client Event Tracking</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230d9488'/><text x='16' y='23' font-size='16' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>C</text></svg>" />
+  <link rel="stylesheet" href="assets/style.css?v=5" />
+  <style>
+    .cevt-logo-mark { background: linear-gradient(135deg, var(--cevt), var(--cevt-dark)) !important; }
+    .cevt-hero {
+      background: radial-gradient(900px 420px at 8% -20%, var(--cevt-soft) 0%, transparent 60%), var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .cevt-hero-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 32px; }
+    .cevt-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--cevt-dark); background: var(--cevt-soft); padding: 5px 12px; border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .cevt-hero h1 { font-size: 26px; font-weight: 800; margin: 0 0 8px; }
+    .cevt-hero p { color: var(--dim); font-size: 14px; max-width: 62ch; margin: 0; line-height: 1.6; }
+
+    .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
+    @media (max-width: 760px) { .module-grid { grid-template-columns: 1fr; } }
+    .module-card {
+      background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius-lg);
+      padding: 20px 22px; position: relative; opacity: .82;
+    }
+    .module-card .mod-icon {
+      width: 38px; height: 38px; border-radius: 10px; background: var(--cevt-soft); color: var(--cevt-dark);
+      display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px;
+    }
+    .module-card h3 { margin: 0 0 6px; font-size: 14.5px; font-weight: 750; }
+    .module-card p { margin: 0; font-size: 12.5px; color: var(--dim); line-height: 1.55; }
+    .module-soon {
+      position: absolute; top: 16px; right: 16px; font-size: 10px; font-weight: 700; letter-spacing: .05em;
+      text-transform: uppercase; color: var(--dim-2); background: #f3f4f6; padding: 3px 8px; border-radius: 20px;
+    }
+
+    .cevt-note {
+      margin-top: 28px; background: var(--cevt-soft); border: 1px solid #99f0e0; border-radius: var(--radius-md);
+      padding: 16px 18px; font-size: 13px; color: var(--cevt-dark); line-height: 1.6;
+    }
+    .cevt-note b { color: #0b5f57; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="logo" href="cevt.html">
+        <span class="logo-mark cevt-logo-mark">C</span><span>CEvT</span>
+      </a>
+      <nav class="main-nav">
+        <a class="nav-link active" href="cevt.html">📡 Genel Bakış</a>
+        <a class="nav-link" href="app.html" target="_blank" rel="noopener">📊 ADMIRA'ya Git ↗</a>
+      </nav>
+    </div>
+    <div class="user-chip">
+      <div>
+        <div class="user-name" id="userName" style="text-align:right">Misafir</div>
+        <div class="user-meta" id="userEmail">admira</div>
+      </div>
+      <div class="avatar" id="userAvatar">C</div>
+      <button class="btn btn-ghost btn-sm" id="btnLogout">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <div class="cevt-hero">
+    <div class="cevt-hero-inner">
+      <span class="cevt-eyebrow">🚧 Yapım aşamasında</span>
+      <h1>Client Event Tracking</h1>
+      <p>Sitedeki ziyaretçileri Client ID bazında izleyecek, buton/etkileşim geçmişini dikey bir zaman çizelgesinde gösterecek ve yeni bir ziyaretçi ilk kez göründüğünde anında bildirim gönderecek modül. Mimari kararı verildi (11 Eylül 2026) — client tracking verisi ERP/PIM'e değil, doğrudan buraya, ADMIRA'ya akacak.</p>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top:28px;">
+    <div class="section-head">
+      <div class="section-title">Planlanan modüller</div>
+    </div>
+
+    <div class="module-grid">
+      <div class="module-card">
+        <span class="module-soon">Yakında</span>
+        <div class="mod-icon">🧭</div>
+        <h3>Client ID Zaman Çizelgesi</h3>
+        <p>Bir Client ID'ye tıklayınca o ziyaretçinin tüm buton/sayfa etkileşimlerini kronolojik olarak gösterir.</p>
+      </div>
+      <div class="module-card">
+        <span class="module-soon">Yakında</span>
+        <div class="mod-icon">🔔</div>
+        <h3>Canlı Bildirimler</h3>
+        <p>Yeni bir Client ID ilk kez göründüğünde ADMIRA'yı telefonuna PWA olarak ekleyip anlık push bildirimi alırsın.</p>
+      </div>
+      <div class="module-card">
+        <span class="module-soon">Yakında</span>
+        <div class="mod-icon">📶</div>
+        <h3>Sinyal Özeti</h3>
+        <p>Pixel, Conversion API ve client-side event akışının sağlığını tek bakışta özetler.</p>
+      </div>
+    </div>
+
+    <div class="cevt-note">
+      <b>Not:</b> Bu sayfa şu an bir iskelet — içerik/işlevsellik henüz eklenmedi. Veri modeli ve event şeması netleşince bu modüller sırayla hayata geçecek. Sağdaki menüden istediğin an ADMIRA'ya (rakip istihbaratı, reklam kütüphanesi, bütçeleme) yeni sekmede geçebilirsin.
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      function el(sel) { return document.querySelector(sel); }
+
+      fetch('api/auth.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'me' })
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (!res || !res.ok) { location.href = 'index.html'; return; }
+        el('#userName').textContent = res.user.name;
+        el('#userEmail').textContent = res.user.email;
+        el('#userAvatar').textContent = (res.user.name || '?').trim().charAt(0).toUpperCase();
+      }).catch(function () { location.href = 'index.html'; });
+
+      el('#btnLogout').onclick = function () {
+        fetch('api/auth.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'logout' })
+        }).then(function () { location.href = 'index.html'; }).catch(function () { location.href = 'index.html'; });
+      };
+    })();
+  </script>
+</body>
+</html>

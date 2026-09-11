@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADMIRA — Giriş Sonrası</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>A</text></svg>" />
+  <link rel="stylesheet" href="assets/style.css?v=5" />
+  <style>
+    html, body { height: 100%; overflow: hidden; }
+    body { display: flex; flex-direction: column; }
+
+    /* Üstte ince, sade bir şerit: marka + kullanıcı — ana odak kapılarda
+       olduğu için burası kasıtlı olarak topbar'dan daha sessiz. */
+    .gate-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; flex-shrink: 0; position: relative; z-index: 5;
+    }
+    .gate-topbar .logo { font-size: 15px; }
+    .gate-user { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--dim); }
+    .gate-user button { border: none; background: transparent; color: var(--dim); cursor: pointer; font-size: 12.5px; text-decoration: underline; padding: 0; }
+    .gate-user button:hover { color: var(--text); }
+
+    .gate-hero { text-align: center; padding: 4px 24px 22px; flex-shrink: 0; }
+    .gate-hero h1 { font-size: 20px; font-weight: 800; margin: 0 0 4px; }
+    .gate-hero p { color: var(--dim); font-size: 13px; margin: 0; }
+
+    .gates { flex: 1; display: flex; min-height: 0; }
+    @media (max-width: 760px) { .gates { flex-direction: column; } }
+
+    .gate {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; padding: 32px 24px; position: relative; overflow: hidden;
+      color: #fff; text-align: center; transition: flex .25s ease;
+    }
+    .gate::before {
+      content: ""; position: absolute; inset: 0; opacity: .94;
+    }
+    .gate-cevt::before { background: linear-gradient(160deg, var(--cevt), #0b5f57); }
+    .gate-admira::before { background: linear-gradient(160deg, #6366f1, #4338ca); }
+
+    /* Hover'da tıklanan kapı büyür, diğeri hafif küçülüp söner — "iki kapı"
+       hissini güçlendiriyor. Dokunmatik cihazlarda hover olmadığı için
+       davranış bozulmaz, sadece bu ince efekt görünmez. */
+    .gates:has(.gate-cevt:hover) .gate-admira,
+    .gates:has(.gate-admira:hover) .gate-cevt { flex: 0.86; filter: brightness(.82); }
+
+    .gate-icon {
+      width: 76px; height: 76px; border-radius: 22px; display: flex; align-items: center; justify-content: center;
+      font-size: 34px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28);
+      backdrop-filter: blur(6px);
+    }
+    .gate h2 { font-size: 26px; font-weight: 800; margin: 0; letter-spacing: .2px; }
+    .gate p { font-size: 13.5px; max-width: 320px; line-height: 1.55; color: rgba(255,255,255,.86); margin: 0; }
+    .gate-cta {
+      margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700;
+      padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.32);
+      transition: background .15s, transform .15s;
+    }
+    .gate:hover .gate-cta { background: rgba(255,255,255,.26); transform: translateY(-1px); }
+    .gate-badge {
+      position: absolute; top: 18px; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      background: rgba(0,0,0,.22); padding: 4px 10px; border-radius: 20px; color: rgba(255,255,255,.9);
+    }
+
+    .gate-divider {
+      position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,.35); z-index: 2;
+    }
+    @media (max-width: 760px) { .gate-divider { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="gate-topbar">
+    <span class="logo"><span class="logo-mark">A</span><span>ADMIRA</span></span>
+    <div class="gate-user">
+      <span id="userLabel"></span>
+      <button type="button" id="btnLogout">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <div class="gate-hero">
+    <h1>Nereye gitmek istersin?</h1>
+    <p>İki alan da aynı hesaba bağlı — birini seçip yeni sekmede aç, diğerine istediğin an menüden dönebilirsin.</p>
+  </div>
+
+  <div class="gates">
+    <a class="gate gate-cevt" href="cevt.html" target="_blank" rel="noopener">
+      <span class="gate-badge">Yakında</span>
+      <span class="gate-icon">📡</span>
+      <h2>CEvT</h2>
+      <p>Client Event Tracking — sitedeki ziyaretçi davranışını Client ID bazında canlı izle, yeni ziyaretçide anında haberdar ol.</p>
+      <span class="gate-cta">Panele gir →</span>
+    </a>
+    <div class="gate-divider"></div>
+    <a class="gate gate-admira" href="app.html">
+      <span class="gate-icon">📊</span>
+      <h2>ADMIRA</h2>
+      <p>Rakip istihbaratı, reklam kütüphanesi, bütçeleme formülleri ve çalışma yöntemi — reklam stratejisinin komuta merkezi.</p>
+      <span class="gate-cta">Panele gir →</span>
+    </a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      function el(sel) { return document.querySelector(sel); }
+
+      fetch('api/auth.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'me' })
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (!res || !res.ok) { location.href = 'index.html'; return; }
+        el('#userLabel').textContent = res.user.name + ' · ' + res.user.email;
+      }).catch(function () { location.href = 'index.html'; });
+
+      el('#btnLogout').onclick = function () {
+        fetch('api/auth.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'logout' })
+        }).then(function () { location.href = 'index.html'; }).catch(function () { location.href = 'index.html'; });
+      };
+    })();
+  </script>
+</body>
+</html>
