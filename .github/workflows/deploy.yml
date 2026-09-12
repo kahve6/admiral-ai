@@ -43,5 +43,10 @@ jobs:
             **/*.md
             .gitignore
             .ftp-deploy-sync-state.json
-            # never overwrite live user data on the host
-            data/*.json
+            # CEvT shared HMAC secret — never synced from repo either way,
+            # lives on the host only (set once by hand).
+            data/.cevt_secret
+            # data/*.json (users.json etc.) normally never overwrites live
+            # data on the host. Include [UPDATE-DATA] in the commit message
+            # to lift this exclusion for that one push — see README.
+            ${{ !contains(github.event.head_commit.message, '[UPDATE-DATA]') && 'data/*.json' || '' }}

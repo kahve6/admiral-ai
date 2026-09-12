@@ -42,4 +42,6 @@ Sonrasında `http://localhost:8000` adresini açın.
 
 Hosting hesabı Git deposunu doğrudan çekiyor (Hostinger otomatik Git dağıtımı). `data/users.json` `.gitignore` ile depodan hariç tutulur, böylece her dağıtımda canlı kullanıcı verisi korunur. `.github/workflows/deploy.yml` üzerindeki FTP workflow'u alternatif/yedek bir dağıtım yoludur; gerekli secrets: `FTP_HOST`, `FTP_USER`, `FTP_PASS`.
 
+**`data/*.json` dosyalarını canlıya bilerek göndermek istersen** (örn. `users.json` sıfırlaması): dosya normalde `.gitignore` ile hariç tutulduğu için önce `git add -f data/users.json` ile o commit'e zorla eklemen, sonra commit mesajına `[UPDATE-DATA]` yazman gerekir — workflow bu etiketi görürse `data/*.json` FTP hariç tutma listesinden çıkar ve o push'ta canlıya yüklenir. Etiket yoksa (varsayılan, her normal push) `data/*.json` hiçbir zaman dokunulmaz, canlıdaki veri korunur. `data/.cevt_secret` bu mekanizmanın tamamen dışında — repo'ya hiç girmez, sunucuda elle set edilir.
+
 Hostinger'ın CDN'i statik dosyalara (`assets/*.css`, `assets/*.js`) uzun (7 gün) cache süresi koyuyor. `index.html`/`app.html`/`tips.html` içindeki script/link etiketleri bu yüzden `?v=N` sürüm parametresi taşır — `assets/` altında değiştirdiğiniz her dosya için bu `?v=` numarasını artırın, aksi halde kullanıcılar eski dosyayı önbellekten görmeye devam edebilir.

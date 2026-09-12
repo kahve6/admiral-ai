@@ -9,6 +9,9 @@
 data/users.json
 data/ads_*.json
 data/competitors_*.json
+data/.cevt_secret
+data/cevt/
+data/*.bak*
 
 # Local FTP sync credentials (see .ftp-sync.example.json for the template)
 .ftp-sync.json

@@ -8,41 +8,59 @@
   <link rel="stylesheet" href="assets/style.css?v=5" />
   <style>
     .cevt-logo-mark { background: linear-gradient(135deg, var(--cevt), var(--cevt-dark)) !important; }
-    .cevt-hero {
-      background: radial-gradient(900px 420px at 8% -20%, var(--cevt-soft) 0%, transparent 60%), var(--bg);
-      border-bottom: 1px solid var(--border);
-    }
-    .cevt-hero-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 32px; }
-    .cevt-eyebrow {
-      display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em;
-      text-transform: uppercase; color: var(--cevt-dark); background: var(--cevt-soft); padding: 5px 12px; border-radius: 20px;
-      margin-bottom: 12px;
-    }
-    .cevt-hero h1 { font-size: 26px; font-weight: 800; margin: 0 0 8px; }
-    .cevt-hero p { color: var(--dim); font-size: 14px; max-width: 62ch; margin: 0; line-height: 1.6; }
 
-    .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
-    @media (max-width: 760px) { .module-grid { grid-template-columns: 1fr; } }
-    .module-card {
-      background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius-lg);
-      padding: 20px 22px; position: relative; opacity: .82;
-    }
-    .module-card .mod-icon {
-      width: 38px; height: 38px; border-radius: 10px; background: var(--cevt-soft); color: var(--cevt-dark);
-      display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px;
-    }
-    .module-card h3 { margin: 0 0 6px; font-size: 14.5px; font-weight: 750; }
-    .module-card p { margin: 0; font-size: 12.5px; color: var(--dim); line-height: 1.55; }
-    .module-soon {
-      position: absolute; top: 16px; right: 16px; font-size: 10px; font-weight: 700; letter-spacing: .05em;
-      text-transform: uppercase; color: var(--dim-2); background: #f3f4f6; padding: 3px 8px; border-radius: 20px;
-    }
+    .cevt-layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; height: calc(100vh - 57px); }
+    @media (max-width: 780px) { .cevt-layout { grid-template-columns: 1fr; height: auto; } }
 
-    .cevt-note {
-      margin-top: 28px; background: var(--cevt-soft); border: 1px solid #99f0e0; border-radius: var(--radius-md);
-      padding: 16px 18px; font-size: 13px; color: var(--cevt-dark); line-height: 1.6;
+    .cevt-sidebar { border-right: 1px solid var(--border); background: var(--card); overflow-y: auto; }
+    .cevt-sidebar-head { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+    .cevt-sidebar-head h2 { margin: 0; font-size: 14.5px; font-weight: 750; }
+    .cevt-sidebar-head p { margin: 4px 0 0; font-size: 12px; color: var(--dim-2); }
+
+    .cevt-client-item {
+      display: flex; flex-direction: column; gap: 3px; padding: 12px 18px; cursor: pointer;
+      border-bottom: 1px solid var(--border); transition: background .12s;
     }
-    .cevt-note b { color: #0b5f57; }
+    .cevt-client-item:hover { background: var(--cevt-soft); }
+    .cevt-client-item.active { background: var(--cevt-soft); box-shadow: inset 3px 0 0 var(--cevt); }
+    .cevt-client-item .row1 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .cevt-client-id { font-family: ui-monospace, monospace; font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cevt-client-badge {
+      font-size: 10.5px; font-weight: 700; color: var(--cevt-dark); background: #fff;
+      border: 1px solid #99f0e0; border-radius: 20px; padding: 1px 8px; flex-shrink: 0;
+    }
+    .cevt-client-meta { font-size: 11px; color: var(--dim-2); display: flex; gap: 8px; flex-wrap: wrap; }
+    .cevt-client-user { color: var(--cevt-dark); font-weight: 600; }
+
+    .cevt-empty-sidebar { padding: 40px 18px; text-align: center; color: var(--dim-2); font-size: 13px; line-height: 1.6; }
+
+    .cevt-main { overflow-y: auto; padding: 24px 28px; }
+    .cevt-main-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .cevt-main-head h2 { margin: 0; font-size: 16px; font-weight: 750; font-family: ui-monospace, monospace; }
+    .cevt-main-head .sub { font-size: 12.5px; color: var(--dim); }
+
+    .cevt-timeline { display: flex; flex-direction: column; }
+    .cevt-tl-item { display: flex; gap: 14px; position: relative; padding-bottom: 18px; }
+    .cevt-tl-item:not(:last-child)::before {
+      content: ''; position: absolute; left: 5px; top: 16px; bottom: 0; width: 1px; background: var(--border);
+    }
+    .cevt-tl-dot {
+      width: 11px; height: 11px; border-radius: 50%; background: var(--cevt); border: 2px solid var(--cevt-soft);
+      flex-shrink: 0; margin-top: 3px;
+    }
+    .cevt-tl-dot.server { background: #7c3aed; border-color: #ede9fe; }
+    .cevt-tl-body { flex: 1; }
+    .cevt-tl-name { font-size: 13.5px; font-weight: 700; color: var(--text); }
+    .cevt-tl-source {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--dim-2); margin-left: 6px;
+    }
+    .cevt-tl-time { font-size: 11.5px; color: var(--dim-2); margin-top: 2px; }
+    .cevt-tl-extra { font-size: 12px; color: var(--dim); margin-top: 4px; }
+    .cevt-tl-extra code { font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; display: inline-block; margin-top: 2px; }
+
+    .cevt-placeholder { text-align: center; padding: 80px 24px; color: var(--dim-2); }
+    .cevt-placeholder .ic { font-size: 34px; margin-bottom: 10px; }
   </style>
 </head>
 <body>
@@ -66,42 +84,19 @@
     </div>
   </div>
 
-  <div class="cevt-hero">
-    <div class="cevt-hero-inner">
-      <span class="cevt-eyebrow">🚧 Yapım aşamasında</span>
-      <h1>Client Event Tracking</h1>
-      <p>Sitedeki ziyaretçileri Client ID bazında izleyecek, buton/etkileşim geçmişini dikey bir zaman çizelgesinde gösterecek ve yeni bir ziyaretçi ilk kez göründüğünde anında bildirim gönderecek modül. Mimari kararı verildi (11 Eylül 2026) — client tracking verisi ERP/PIM'e değil, doğrudan buraya, ADMIRA'ya akacak.</p>
-    </div>
-  </div>
-
-  <div class="container" style="padding-top:28px;">
-    <div class="section-head">
-      <div class="section-title">Planlanan modüller</div>
-    </div>
-
-    <div class="module-grid">
-      <div class="module-card">
-        <span class="module-soon">Yakında</span>
-        <div class="mod-icon">🧭</div>
-        <h3>Client ID Zaman Çizelgesi</h3>
-        <p>Bir Client ID'ye tıklayınca o ziyaretçinin tüm buton/sayfa etkileşimlerini kronolojik olarak gösterir.</p>
+  <div class="cevt-layout">
+    <div class="cevt-sidebar">
+      <div class="cevt-sidebar-head">
+        <h2>Client'lar</h2>
+        <p id="clientCount">Yükleniyor…</p>
       </div>
-      <div class="module-card">
-        <span class="module-soon">Yakında</span>
-        <div class="mod-icon">🔔</div>
-        <h3>Canlı Bildirimler</h3>
-        <p>Yeni bir Client ID ilk kez göründüğünde ADMIRA'yı telefonuna PWA olarak ekleyip anlık push bildirimi alırsın.</p>
-      </div>
-      <div class="module-card">
-        <span class="module-soon">Yakında</span>
-        <div class="mod-icon">📶</div>
-        <h3>Sinyal Özeti</h3>
-        <p>Pixel, Conversion API ve client-side event akışının sağlığını tek bakışta özetler.</p>
-      </div>
+      <div id="clientList"></div>
     </div>
-
-    <div class="cevt-note">
-      <b>Not:</b> Bu sayfa şu an bir iskelet — içerik/işlevsellik henüz eklenmedi. Veri modeli ve event şeması netleşince bu modüller sırayla hayata geçecek. Sağdaki menüden istediğin an ADMIRA'ya (rakip istihbaratı, reklam kütüphanesi, bütçeleme) yeni sekmede geçebilirsin.
+    <div class="cevt-main" id="mainPanel">
+      <div class="cevt-placeholder">
+        <div class="ic">🧭</div>
+        <div>Soldan bir Client ID seç, olay geçmişini burada gör.</div>
+      </div>
     </div>
   </div>
 
@@ -111,6 +106,9 @@
     (function () {
       function el(sel) { return document.querySelector(sel); }
 
+      var selectedClientId = null;
+      var pollTimer = null;
+
       fetch('api/auth.php', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'me' })
@@ -119,6 +117,8 @@
         el('#userName').textContent = res.user.name;
         el('#userEmail').textContent = res.user.email;
         el('#userAvatar').textContent = (res.user.name || '?').trim().charAt(0).toUpperCase();
+        loadClients();
+        pollTimer = setInterval(loadClients, 5000);
       }).catch(function () { location.href = 'index.html'; });
 
       el('#btnLogout').onclick = function () {
@@ -127,6 +127,103 @@
           body: JSON.stringify({ action: 'logout' })
         }).then(function () { location.href = 'index.html'; }).catch(function () { location.href = 'index.html'; });
       };
+
+      function timeAgo(iso) {
+        if (!iso) return '';
+        var diff = (Date.now() - new Date(iso).getTime()) / 1000;
+        if (diff < 60) return 'az önce';
+        if (diff < 3600) return Math.floor(diff / 60) + ' dk önce';
+        if (diff < 86400) return Math.floor(diff / 3600) + ' sa önce';
+        return Math.floor(diff / 86400) + ' gün önce';
+      }
+
+      function shortId(id) { return id.length > 13 ? id.slice(0, 8) + '…' : id; }
+
+      function loadClients() {
+        fetch('api/cevt.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'list_clients' })
+        }).then(function (r) { return r.json(); }).then(function (res) {
+          if (!res || !res.ok) return;
+          renderClientList(res.clients || []);
+        }).catch(function () {});
+      }
+
+      function renderClientList(clients) {
+        el('#clientCount').textContent = clients.length + ' client';
+        var list = el('#clientList');
+
+        if (clients.length === 0) {
+          list.innerHTML = '<div class="cevt-empty-sidebar">Henüz event gelmedi. SF entegrasyonu aktif olduğunda ilk ziyaretçi burada görünecek.</div>';
+          return;
+        }
+
+        list.innerHTML = clients.map(function (c) {
+          var activeCls = c.client_id === selectedClientId ? ' active' : '';
+          var userChip = c.user_id ? '<span class="cevt-client-user">👤 ' + c.user_id + '</span>' : '';
+          return (
+            '<div class="cevt-client-item' + activeCls + '" data-id="' + c.client_id + '">' +
+              '<div class="row1"><span class="cevt-client-id">' + shortId(c.client_id) + '</span>' +
+                '<span class="cevt-client-badge">' + c.event_count + '</span></div>' +
+              '<div class="cevt-client-meta"><span>' + timeAgo(c.last_seen) + '</span>' + userChip + '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        Array.prototype.forEach.call(list.querySelectorAll('.cevt-client-item'), function (node) {
+          node.onclick = function () { selectClient(node.getAttribute('data-id')); };
+        });
+      }
+
+      function selectClient(clientId) {
+        selectedClientId = clientId;
+        Array.prototype.forEach.call(el('#clientList').querySelectorAll('.cevt-client-item'), function (node) {
+          node.classList.toggle('active', node.getAttribute('data-id') === clientId);
+        });
+        loadEvents(clientId);
+      }
+
+      function loadEvents(clientId) {
+        var main = el('#mainPanel');
+        main.innerHTML = '<div class="cevt-placeholder">Yükleniyor…</div>';
+        fetch('api/cevt.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'get_client', client_id: clientId })
+        }).then(function (r) { return r.json(); }).then(function (res) {
+          if (!res || !res.ok) { main.innerHTML = '<div class="cevt-placeholder">Yüklenemedi.</div>'; return; }
+          renderTimeline(clientId, res.events || []);
+        }).catch(function () { main.innerHTML = '<div class="cevt-placeholder">Yüklenemedi.</div>'; });
+      }
+
+      function renderTimeline(clientId, events) {
+        var main = el('#mainPanel');
+        var head =
+          '<div class="cevt-main-head"><h2>' + clientId + '</h2>' +
+          '<span class="sub">' + events.length + ' olay</span></div>';
+
+        if (events.length === 0) {
+          main.innerHTML = head + '<div class="cevt-placeholder"><div class="ic">🕳️</div>Bu client için henüz olay yok.</div>';
+          return;
+        }
+
+        var items = events.slice().reverse().map(function (ev) {
+          var dotCls = ev.source === 'server' ? ' server' : '';
+          var extra = '';
+          if (ev.page_url) { extra += '<div class="cevt-tl-extra">' + ev.page_url + '</div>'; }
+          if (ev.value) { extra += '<div class="cevt-tl-extra"><code>' + JSON.stringify(ev.value) + '</code></div>'; }
+          return (
+            '<div class="cevt-tl-item"><div class="cevt-tl-dot' + dotCls + '"></div>' +
+              '<div class="cevt-tl-body">' +
+                '<span class="cevt-tl-name">' + ev.event_name + '</span>' +
+                '<span class="cevt-tl-source">' + ev.source + '</span>' +
+                '<div class="cevt-tl-time">' + new Date(ev.occurred_at).toLocaleString('tr-TR') + '</div>' +
+                extra +
+              '</div></div>'
+          );
+        }).join('');
+
+        main.innerHTML = head + '<div class="cevt-timeline">' + items + '</div>';
+      }
     })();
   </script>
 </body>
