@@ -11,7 +11,7 @@ header('Content-Type: application/json; charset=utf-8');
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if ($origin !== '' && preg_match('#^https://([a-z0-9-]+\.)*tiotr\.com$#i', $origin)) {
     header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Headers: Content-Type, X-CEvT-Signature');
+    header('Access-Control-Allow-Headers: Content-Type, X-CEvT-Signature, X-CEvT-Client-Token, X-CEvT-Token-Expires');
     header('Access-Control-Allow-Methods: POST, OPTIONS');
 }
 
@@ -42,12 +42,6 @@ if (!file_exists($secretFile)) {
 $secret = trim(file_get_contents($secretFile));
 
 $rawBody = file_get_contents('php://input') ?: '';
-$signature = $_SERVER['HTTP_X_CEVT_SIGNATURE'] ?? '';
-$expected = hash_hmac('sha256', $rawBody, $secret);
-
-if ($signature === '' || !hash_equals($expected, $signature)) {
-    respond(['ok' => false, 'error' => 'invalid_signature'], 401);
-}
 
 $event = json_decode($rawBody, true);
 if (!is_array($event)) {
@@ -65,6 +59,40 @@ if (!preg_match('/^[a-f0-9-]{8,64}$/i', $clientId)) {
 }
 if ($eventName === '' || $eventId === '' || $occurredAt === '' || !in_array($source, ['client', 'server'], true)) {
     respond(['ok' => false, 'error' => 'missing_fields'], 400);
+}
+
+// İki auth modu:
+// 1) Tam-body HMAC (X-CEvT-Signature) — server-to-server relay (Purchase dahil
+//    her event_name/source için geçerli, sınırsız güven).
+// 2) Client-scoped token (X-CEvT-Client-Token + X-CEvT-Token-Expires) — TIOTR
+//    PHP'sinin sayfa yüklemesinde ağ I/O'suna girmeden ürettiği, tek client_id +
+//    süre penceresine bağlı token; tarayıcı event'i doğrudan buraya atar. Bilinçli
+//    gevşeme: bu token'ı ele geçiren biri KENDİ client_id'sine sahte event
+//    enjekte edebilir ama başkasınınkini taklit edemez (secret olmadan doğru
+//    token üretilemez) — bu yüzden yalnızca source=client ve purchase DIŞINDAKİ
+//    event'ler için kabul ediliyor; Purchase (client kopyası dahil) ve server
+//    kaynaklı her şey mutlak olarak tam-body HMAC gerektirir.
+$signature = $_SERVER['HTTP_X_CEVT_SIGNATURE'] ?? '';
+$clientToken = $_SERVER['HTTP_X_CEVT_CLIENT_TOKEN'] ?? '';
+$tokenExpires = $_SERVER['HTTP_X_CEVT_TOKEN_EXPIRES'] ?? '';
+
+$authOk = false;
+
+if ($signature !== '') {
+    $expected = hash_hmac('sha256', $rawBody, $secret);
+    $authOk = hash_equals($expected, $signature);
+} elseif ($clientToken !== '' && $tokenExpires !== '') {
+    $canUseToken = $source === 'client' && $eventName !== 'purchase';
+    $expiresInt = ctype_digit($tokenExpires) ? (int)$tokenExpires : 0;
+    $withinWindow = $expiresInt >= time() && $expiresInt <= time() + 7200; // max 2 saat
+    if ($canUseToken && $withinWindow) {
+        $expectedToken = hash_hmac('sha256', $clientId . '|' . $expiresInt, $secret);
+        $authOk = hash_equals($expectedToken, $clientToken);
+    }
+}
+
+if (!$authOk) {
+    respond(['ok' => false, 'error' => 'invalid_signature'], 401);
 }
 
 $record = [
